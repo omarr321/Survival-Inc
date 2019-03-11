@@ -17,8 +17,9 @@ We are using javaFX for graphics and front-end operations. Back-end will utilize
 * Week 1 (March 3 - March 10)
 	1. Finsh setting up repostory
 	2. Discuss what we do further
-* Week 2
-	* TBA
+* Week 2 (March 10 - March 16)
+	1. Meet up to work on UMLs
+	2. Work on UMLs
 * Week 3
 	* TBA
 * Week 4
