@@ -15,32 +15,18 @@ public class Map {
 				int random = Math.toIntExact(Math.round(Math.random() * 9));
 				switch (random) {
 				case 0:
-					map[j][i] = Grass;
-					break;
 				case 1:
-					map[j][i] = Grass;
-					break;
 				case 2:
-					map[j][i] = Grass;
-					break;
 				case 3:
-					map[j][i] = Grass;
-					break;
 				case 4:
-					map[j][i] = Grass;
-					break;
 				case 5:
 					map[j][i] = Grass;
 					break;
 				case 6:
-					map[j][i] = Stone;
-					break;
 				case 7:
 					map[j][i] = Stone;
 					break;
 				case 8:
-					map[j][i] = Water;
-					break;
 				case 9:
 					map[j][i] = Water;
 				}
@@ -95,347 +81,74 @@ public class Map {
 		}
 	}
 
+	private Color checkColor(Color c, int xOffSet, int yOffSet, int x, int y) {
+		String temp = "";
+		try {
+			temp = getColorType(x + xOffSet, y + yOffSet);
+		} catch (ArrayIndexOutOfBoundsException ex) {
+		}
+		if (temp == "Grass") {
+			return Grass;
+		} else if (temp == "Water") {
+			return Water;
+		} else if (temp == "Stone") {
+			return Stone;
+		} else {
+			return c;
+		}
+	}
+	
 	private Color calcColor(int x, int y) {
 		int random = Math.toIntExact(Math.round(Math.random() * 23));
-		String temp = "";
-
 		switch (random) {
 		case 0:
-			try {
-				temp = getColorType(x - 1, y - 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Grass;
-			}
+			checkColor(Grass, -1, -1, x, y);
 		case 1:
-			try {
-				temp = getColorType(x - 1, y - 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Water;
-			}
+			checkColor(Water, -1, -1, x, y);
 		case 2:
-			try {
-				temp = getColorType(x - 1, y - 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Stone;
-			}
+			checkColor(Stone, -1, -1, x, y);
 		case 3:
-			try {
-				temp = getColorType(x - 1, y);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Grass;
-			}
+			checkColor(Grass, -1, 0, x, y);
 		case 4:
-			try {
-				temp = getColorType(x - 1, y);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Water;
-			}
+			checkColor(Water, -1, 0, x, y);
 		case 5:
-			try {
-				temp = getColorType(x - 1, y);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Stone;
-			}
+			checkColor(Stone, -1, 0, x, y);
 		case 6:
-			try {
-				temp = getColorType(x - 1, y + 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Grass;
-			}
+			checkColor(Grass, -1, 1, x, y);
 		case 7:
-			try {
-				temp = getColorType(x - 1, y + 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Water;
-			}
+			checkColor(Water, -1, 1, x, y);
 		case 8:
-			try {
-				temp = getColorType(x - 1, y + 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Stone;
-			}
+			checkColor(Stone, -1, 1, x, y);
 		case 9:
-			try {
-				temp = getColorType(x, y + 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Grass;
-			}
+			checkColor(Grass, 0, 1, x, y);
 		case 10:
-			try {
-				temp = getColorType(x, y + 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Water;
-			}
+			checkColor(Water, 0, 1, x, y);
 		case 11:
-			try {
-				temp = getColorType(x, y + 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Stone;
-			}
+			checkColor(Stone, 0, 1, x, y);
 		case 12:
-			try {
-				temp = getColorType(x + 1, y + 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Grass;
-			}
+			checkColor(Grass, 1, 1, x, y);
 		case 13:
-			try {
-				temp = getColorType(x + 1, y + 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Water;
-			}
+			checkColor(Water, 1, 1, x, y);
 		case 14:
-			try {
-				temp = getColorType(x + 1, y + 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Stone;
-			}
+			checkColor(Stone, 1, 1, x, y);
 		case 15:
-			try {
-				temp = getColorType(x + 1, y);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Grass;
-			}
+			checkColor(Grass, 1, 0, x, y);
 		case 16:
-			try {
-				temp = getColorType(x + 1, y);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Water;
-			}
+			checkColor(Water, 1, 0, x, y);
 		case 17:
-			try {
-				temp = getColorType(x + 1, y);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Stone;
-			}
+			checkColor(Stone, 1, 0, x, y);
 		case 18:
-			try {
-				temp = getColorType(x + 1, y - 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Grass;
-			}
+			checkColor(Grass, 1, -1, x, y);
 		case 19:
-			try {
-				temp = getColorType(x + 1, y - 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Water;
-			}
+			checkColor(Water, 1, -1, x, y);
 		case 20:
-			try {
-				temp = getColorType(x + 1, y - 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Stone;
-			}
+			checkColor(Stone, 1, -1, x, y);
 		case 21:
-			try {
-				temp = getColorType(x, y - 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Grass;
-			}
+			checkColor(Grass, 0, -1, x, y);
 		case 22:
-			try {
-				temp = getColorType(x, y - 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Water;
-			}
+			checkColor(Water, 0, -1, x, y);
 		case 23:
-			try {
-				temp = getColorType(x, y - 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Stone;
-			}
+			checkColor(Stone, 0, -1, x, y);
 		default:
 			return Grass;
 		}
