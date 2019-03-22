@@ -3,6 +3,7 @@ package backEnd;
 import javafx.scene.paint.Color;
 
 public class Map {
+	private Color map_color;
 	private Color[][] map = new Color[9][9];
 	final private static Color Grass = Color.rgb(10, 151, 0);
 	final private static Color Water = Color.rgb(0, 65, 245);
@@ -54,6 +55,30 @@ public class Map {
 		}
 	}
 
+	/**
+	 * Returns a color that is the average of all tiles on the map
+	 * 
+	 * @return Average Color
+	 */
+	public Color getAverageColor() {
+		double[] average = new double[3];
+		
+		// Get sum of all RBG values
+		for(int i = 0; i < map.length; i++) {
+			for(int j = 0; j < map[0].length; j++) {
+				average[0] += getColor(j,i).getRed();
+				average[1] += getColor(j,i).getGreen();
+				average[2] += getColor(j,i).getBlue();
+			}
+		}
+		
+		average[0] /= (double) (map.length * map[0].length);
+		average[1] /= (double) (map.length * map[0].length);
+		average[2] /= (double) (map.length * map[0].length);
+		
+		return new Color(average[0],average[1],average[2],1);
+	}
+	
 	public Color getColor(int x, int y) {
 		return map[x][y];
 	}

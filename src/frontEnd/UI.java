@@ -33,7 +33,20 @@ public class UI extends Application {
 		Pane map = new Pane();
 		GridPane mapGrid = new GridPane();
 		Circle player = new Circle(22);
-
+		// Test
+		Rectangle debug = new Rectangle();
+		debug.setX(32);
+		debug.setY(32);
+		debug.setWidth(32);
+		debug.setHeight(32);
+		debug.setStroke(Color.BLACK);
+		debug.setFill(colorMap.getAverageColor());
+		map.getChildren().add(debug);
+		System.out.println(colorMap.getAverageColor().getRed());
+		System.out.println(colorMap.getAverageColor().getGreen());
+		System.out.println(colorMap.getAverageColor().getBlue());
+		// Test
+		
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
 				Rectangle mapSqaure = new Rectangle();
