@@ -1,443 +1,199 @@
 package backEnd;
+import java.util.ArrayList;
 
-import javafx.scene.paint.Color;
+import entities.*;
 
 public class Map {
-	private Color map_color;
-	private Color[][] map = new Color[9][9];
-	final private static Color Grass = Color.rgb(10, 151, 0);
-	final private static Color Water = Color.rgb(0, 65, 245);
-	final private static Color Stone = Color.rgb(141, 141, 141);
 
-	public Map() {
-		for (int i = 0; i < 9; i++) {
-			for (int j = 0; j < 9; j++) {
-				int random = Math.toIntExact(Math.round(Math.random() * 9));
-				switch (random) {
-				case 0:
-					map[j][i] = Grass;
-					break;
-				case 1:
-					map[j][i] = Grass;
-					break;
-				case 2:
-					map[j][i] = Grass;
-					break;
-				case 3:
-					map[j][i] = Grass;
-					break;
-				case 4:
-					map[j][i] = Grass;
-					break;
-				case 5:
-					map[j][i] = Grass;
-					break;
-				case 6:
-					map[j][i] = Stone;
-					break;
-				case 7:
-					map[j][i] = Stone;
-					break;
-				case 8:
-					map[j][i] = Water;
-					break;
-				case 9:
-					map[j][i] = Water;
-				}
-			}
-		}
-		for (int l = 0; l <= 2; l++) {
-			for (int i = 0; i < 9; i++) {
-				for (int j = 0; j < 9; j++) {
-					map[j][i] = calcColor(j, i);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Returns a color that is the average of all tiles on the map
-	 * 
-	 * @return Average Color
-	 */
-	public Color getAverageColor() {
-		double[] average = new double[3];
+	public static final int DEFAULT_SIZE = 24;
+	public static final Tile DEFAULT_TILE = Tile.GRASS;
+	
+	private int spawnX;
+	private int spawnY;
+	
+	public enum Tile {
+		STONE("S"),
+		GRASS("G"),
+		WATER("W");
 		
-		// Get sum of all RBG values
-		for(int i = 0; i < map.length; i++) {
-			for(int j = 0; j < map[0].length; j++) {
-				average[0] += getColor(j,i).getRed();
-				average[1] += getColor(j,i).getGreen();
-				average[2] += getColor(j,i).getBlue();
-			}
+		public final String printSymbol;
+		
+		Tile(String printSymbol) {
+			this.printSymbol = printSymbol;
 		}
-		
-		average[0] /= (double) (map.length * map[0].length);
-		average[1] /= (double) (map.length * map[0].length);
-		average[2] /= (double) (map.length * map[0].length);
-		
-		return new Color(average[0],average[1],average[2],1);
 	}
 	
-	public Color getColor(int x, int y) {
-		return map[x][y];
+	Tile[][] tilegrid;
+	ArrayList<Entity> entities;
+	
+	/*
+	 * Constructor.
+	 * 
+	 * @param width The amount of tiles that expand horizontally
+	 * @param height The amount of tiles that expand vertically
+	 * @param fill The tile that will fill the entire map
+	 */
+	public Map(int width, int height, int spawnX, int spawnY, Tile fill) {
+		this.entities = new ArrayList<Entity>();
+		this.spawnX = spawnX;
+		this.spawnY = spawnY;
+		tilegrid = new Tile[height][width];
+		tileFill(fill);
 	}
-
-	private String getColorType(int x, int y) {
-		if (map[x][y] == Grass) {
-			return "Grass";
-		} else if (map[x][y] == Stone) {
-			return "Stone";
-		} else if (map[x][y] == Water) {
-			return "Water";
+	
+	public Map(int width, int height, Tile fill) {
+		this(width, height, width/2, height/2, fill);
+	}
+	
+	public Map(int size, Tile fill) {
+		this(size, size, fill);
+	}
+	
+	public Map(Tile fill) {
+		this(DEFAULT_SIZE, DEFAULT_SIZE, fill);
+	}
+	
+	public Map() {
+		this(DEFAULT_SIZE, DEFAULT_SIZE, DEFAULT_TILE);
+	}
+	
+	/*
+	 * Sets a tile at a valid position
+	 * 
+	 * @param x The x location of the tile (must be in bounds)
+	 * @param y The y location of the tile (must be in bounds)
+	 */
+	public void setTile(int x, int y, Tile tile) {
+		if(isValidPosition(x, y)) {
+			tilegrid[y][x] = tile;
+		}
+	}
+	
+	/*
+	 * Gets a tile from a valid position
+	 * 
+	 * @param x The x location of the tile (must be in bounds)
+	 * @param y The y location of the tile (must be in bounds)
+	 * @return The tile at (x,y)
+	 */
+	public Tile getTile(int x, int y) {
+		if(isValidPosition(x, y)) {
+			return tilegrid[y][x];
 		} else {
 			return null;
 		}
 	}
-
-	private Color calcColor(int x, int y) {
-		int random = Math.toIntExact(Math.round(Math.random() * 23));
-		String temp = "";
-
-		switch (random) {
-		case 0:
-			try {
-				temp = getColorType(x - 1, y - 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
+	
+	/*
+	 * Sets all tiles on the map to fill.
+	 * 
+	 * @param fill The tile that will replace every tile on the map.
+	 */
+	public void tileFill(Tile fill) {
+		for(int y = 0; y < getHeight(); y++) {
+			for(int x = 0; x < getWidth(); x++) {
+				setTile(x, y, fill);
 			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Grass;
-			}
-		case 1:
-			try {
-				temp = getColorType(x - 1, y - 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Water;
-			}
-		case 2:
-			try {
-				temp = getColorType(x - 1, y - 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Stone;
-			}
-		case 3:
-			try {
-				temp = getColorType(x - 1, y);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Grass;
-			}
-		case 4:
-			try {
-				temp = getColorType(x - 1, y);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Water;
-			}
-		case 5:
-			try {
-				temp = getColorType(x - 1, y);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Stone;
-			}
-		case 6:
-			try {
-				temp = getColorType(x - 1, y + 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Grass;
-			}
-		case 7:
-			try {
-				temp = getColorType(x - 1, y + 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Water;
-			}
-		case 8:
-			try {
-				temp = getColorType(x - 1, y + 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Stone;
-			}
-		case 9:
-			try {
-				temp = getColorType(x, y + 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Grass;
-			}
-		case 10:
-			try {
-				temp = getColorType(x, y + 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Water;
-			}
-		case 11:
-			try {
-				temp = getColorType(x, y + 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Stone;
-			}
-		case 12:
-			try {
-				temp = getColorType(x + 1, y + 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Grass;
-			}
-		case 13:
-			try {
-				temp = getColorType(x + 1, y + 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Water;
-			}
-		case 14:
-			try {
-				temp = getColorType(x + 1, y + 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Stone;
-			}
-		case 15:
-			try {
-				temp = getColorType(x + 1, y);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Grass;
-			}
-		case 16:
-			try {
-				temp = getColorType(x + 1, y);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Water;
-			}
-		case 17:
-			try {
-				temp = getColorType(x + 1, y);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Stone;
-			}
-		case 18:
-			try {
-				temp = getColorType(x + 1, y - 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Grass;
-			}
-		case 19:
-			try {
-				temp = getColorType(x + 1, y - 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Water;
-			}
-		case 20:
-			try {
-				temp = getColorType(x + 1, y - 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Stone;
-			}
-		case 21:
-			try {
-				temp = getColorType(x, y - 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Grass;
-			}
-		case 22:
-			try {
-				temp = getColorType(x, y - 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Water;
-			}
-		case 23:
-			try {
-				temp = getColorType(x, y - 1);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-			}
-			if (temp == "Grass") {
-				return Grass;
-			} else if (temp == "Water") {
-				return Water;
-			} else if (temp == "Stone") {
-				return Stone;
-			} else {
-				return Stone;
-			}
-		default:
-			return Grass;
 		}
+	}
+	
+	/*
+	 * Gets current width of the map in units of tiles
+	 * 
+	 * @return The amount of tiles that expand horizontally
+	 */
+	public int getWidth() {
+		return tilegrid[0].length;
+	}
+	
+	/*
+	 * Gets current height of the map in units of tiles
+	 * 
+	 * @return The amount of tiles that expand vertically
+	 */
+	public int getHeight() {
+		return tilegrid.length;
+	}
+	
+	/*
+	 * Checks if the provided position is in bounds of the map
+	 * 
+	 * @param x The x position on the map
+	 * @param y The y position on the map
+	 * @return if the (x,y) coordinate is in bounds of the map space
+	 */
+	public boolean isValidPosition(int x, int y) {
+		return x >= 0 && x < getWidth() && y >= 0 && y < getHeight();
+	}
+	
+	public int getDefaultSpawnX() {
+		return spawnX;
+	}
+	
+	public int getDefaultSpawnY() {
+		return spawnY;
+	}
+	
+	public void setDefaultSpawn(int x, int y) {
+		if(isValidPosition(x, y)) {
+			spawnX = x;
+			spawnY = y;
+		}
+	}
+	
+	public Entity addEntity(Entity entity) {
+		if(!entities.contains(entity)) {
+			entities.add(entity);	
+			return entity;
+		} else {
+			return null;
+		}
+	}
+	
+	public Entity removeEntity(Entity entity) {
+		if(entities.contains(entity)) {
+			entities.remove(entity);
+			return entity;
+		} else {
+			return null;
+		}
+		
+	}
+	/*
+	 * Returns a ASCII visual of the map.
+	 * (Ex):
+	 * 
+	 * | [G][G][S] |
+	 * | [G][S][S] |
+	 * | [G][G][S] |
+	 * 
+	 * @return A string that is a printer friendly map visual.
+	 */
+	@Override
+	public String toString() {
+		StringBuilder grid = new StringBuilder();
+		
+		String[][] overlay = new String[getHeight()][getWidth()];
+		
+		for(int i = 0; i < entities.size(); i++) {
+			overlay[entities.get(i).getPosY()][entities.get(i).getPosX()] = entities.get(i).printSymbol;
+		}
+		
+		for(int y = 0; y < getHeight(); y++) {
+			grid.append("| ");
+			for(int x = 0; x < getWidth(); x++) {
+				grid.append("[");
+				
+				if(overlay[y][x] != null) {
+					grid.append(overlay[y][x]);
+				} else {
+					grid.append(getTile(x, y).printSymbol);
+				}
+				grid.append("]");
+			}
+			grid.append(" |\n");
+		}
+		
+		return grid.toString();
 	}
 }
