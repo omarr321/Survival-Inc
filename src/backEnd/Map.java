@@ -176,7 +176,9 @@ public class Map {
 		String[][] overlay = new String[getHeight()][getWidth()];
 		
 		for(int i = 0; i < entities.size(); i++) {
-			overlay[entities.get(i).getPosY()][entities.get(i).getPosX()] = entities.get(i).printSymbol;
+			if(entities.get(i).getVisibility()) {
+				overlay[entities.get(i).getPosY()][entities.get(i).getPosX()] = entities.get(i).printSymbol;
+			}
 		}
 		
 		for(int y = 0; y < getHeight(); y++) {

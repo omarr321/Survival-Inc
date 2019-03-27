@@ -9,15 +9,22 @@ public class Test {
 		Map cartman = new Map(6, Tile.STONE);
 		Map kyle = new Map(6, Tile.GRASS);
 		
-		Entity brick = new Entity(cartman, 3, 1);
-		Entity stick = new Entity(cartman, 0, 3);
+		Player me = new Player(cartman);
+		
+		Stick yeeted = new Stick(cartman, 0, 0);
 
 		System.out.print(cartman);
 		System.out.println();
+		System.out.print(kyle);
+		System.out.println();
 		
-		stick.setPos(4, 3);
-		
+		yeeted.moveToMap(kyle);
+		Stick boi = new Stick(kyle, 2, 2);
+		Stick man = new Stick(kyle, 3, 2);
+
 		System.out.print(cartman);
+		System.out.println();
+		System.out.print(kyle);
 		System.out.println();
 	}
 }

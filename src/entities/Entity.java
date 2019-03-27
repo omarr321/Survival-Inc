@@ -1,18 +1,18 @@
 package entities;
 import backEnd.*;
 
-public class Entity {
-	private Map containedMap;
+public abstract class Entity {
+	protected Map containedMap;
 	
-	private int posX;
-	private int posY;
-	public final String printSymbol;
+	protected int posX;
+	protected int posY;
+	protected boolean visible = true;
+	public String printSymbol = "*";
 	
 	public Entity(Map containedMap, int x, int y) {
 		this.posX = x;
 		this.posY = y;
 		this.containedMap = containedMap;
-		this.printSymbol = "*";
 		setPos(getPosX(), getPosY());
 		containedMap.addEntity(this);
 	}
@@ -54,4 +54,14 @@ public class Entity {
 	public int getPosY() {
 		return posY;
 	}
+	
+	public boolean getVisibility() {
+		return visible;
+	}
+	
+	public void setVisibility(boolean visible)  {
+		this.visible = visible;
+	}
+	
+	public abstract String getPrintSymbol();
 }
