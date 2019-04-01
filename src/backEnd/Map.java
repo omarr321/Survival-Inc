@@ -23,6 +23,7 @@ public class Map {
 	
 	private int spawnX;
 	private int spawnY;
+	private String printname = "Untitled Map";
 	
 	public enum Tile {
 		STONE("S"),
@@ -99,6 +100,24 @@ public class Map {
 	}
 	
 	/*
+	 * Get the printer friendly name of the map.
+	 * 
+	 * @return String name.
+	 */
+	public String getName() {
+		return printname;
+	}
+	
+	/*
+	 * Sets the printer friendly name of the map.
+	 * 
+	 * @param name String name.
+	 */
+	public void setName(String name) {
+		printname = name;
+	}
+	
+	/*
 	 * Sets a tile at a valid position
 	 * 
 	 * @param x The x location of the tile (must be in bounds)
@@ -125,6 +144,54 @@ public class Map {
 		}
 	}
 	
+	/*
+	 * Gets all entities on the map.
+	 * 
+	 * @return All entities on the map
+	 */
+	public ArrayList<Entity> getAllEntities() {
+		return getAllEntities(false);
+	}
+	
+	/*
+	 * Gets all entities on the map.
+	 * 
+	 * @param hidden Includes entities on map that are hidden or invisible.
+	 * @return All entities on the map
+	 */
+	public ArrayList<Entity> getAllEntities(boolean hidden) {
+		ArrayList<Entity> list = new ArrayList<>();
+		if(!hidden) {
+			for(int i = 0; i < entities.size(); i++) {
+				if(entities.get(i).getVisibility()) {
+					list.add(entities.get(i));
+				}
+			}
+		} else {
+			for(int i = 0; i < entities.size(); i++) {
+				list.add(entities.get(i));
+			}
+		}
+		
+		return list;
+	}
+	
+	/*
+	 * Gets all entities that exists at a specific position.
+	 * 
+	 * @param x The x position to look for entities.
+	 * @param y The y position to look for entities.
+	 * @return The list of entities found at that position.
+	 */
+	public ArrayList<Entity> getEntitiesAtPos(int x, int y) {
+		ArrayList list = new ArrayList<>();
+		for(int i = 0; i < entities.size(); i++) {
+			if(entities.get(i).getPosX() == x && entities.get(i).getPosY() == y) {
+				list.add(entities.get(i));
+			}
+		}
+		return list;
+	}
 	/*
 	 * Sets all tiles on the map to fill.
 	 * 
@@ -242,16 +309,28 @@ public class Map {
 	 */
 	@Override
 	public String toString() {
-		StringBuilder grid = new StringBuilder();
 		
-		String[][] overlay = new String[getHeight()][getWidth()];
-		
-		for(int i = 0; i < entities.size(); i++) {
-			if(entities.get(i).getVisibility()) {
-				overlay[entities.get(i).getPosY()][entities.get(i).getPosX()] = entities.get(i).getPrintSymbol();
+		// Separate all entities by position and determine if entities overlap by layer presidence
+		String[][] overlay = new String[getWidth()][getHeight()];
+		for(int i = 0; i < getHeight(); i++) {
+			for(int j = 0; j < getWidth(); j++) {
+				ArrayList<Entity> temp = getEntitiesAtPos(j, i);
+				int index = 0;
+				
+				for(int k = 0; k < temp.size(); k++) {
+					if(temp.get(k).getLayer() >= temp.get(index).getLayer()) {
+						index = k;
+					}
+				}
+				
+				if(temp.size() > 0) {
+					overlay[i][j] = temp.get(index).getPrintSymbol();
+				}
 			}
 		}
 		
+		// Begin to print the viewport using overlay
+		StringBuilder grid = new StringBuilder();
 		for(int y = 0; y < getHeight(); y++) {
 			grid.append("| ");
 			for(int x = 0; x < getWidth(); x++) {
