@@ -66,6 +66,8 @@ public abstract class Entity {
 	 * binded map's boundaries. If position is not in bounds,
 	 * the entity will not move.
 	 * 
+	 * @param x The x position where entity moves to (if in bounds)
+	 * @param y The y position where entity moves to (if in bounds)
 	 * @return If position was in bounds
 	 */
 	public boolean setPos(int x, int y) {
@@ -76,6 +78,17 @@ public abstract class Entity {
 		} else {
 			return false;
 		}
+	}
+	
+	/*
+	 * Moves entity by an increment of x and y.
+	 * 
+	 * @param x The increment that entity moves horizontally
+	 * @param y The increment that entity moves vertically
+	 * @return If position was in bounds
+	 */
+	public boolean move(int x, int y) {
+		return setPos(getPosX()+x,getPosY()+y);
 	}
 	
 	/*
