@@ -12,6 +12,8 @@ import backEnd.*;
 public abstract class Entity {
 	protected Map containedMap;
 
+	private int layer = 0;
+	
 	protected int posX;
 	protected int posY;
 	protected boolean visible = true;

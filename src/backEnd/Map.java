@@ -30,12 +30,22 @@ public class Map {
 	private String printname = "Untitled Map";
 
 	public enum Tile {
-		STONE("S"), GRASS("G"), WATER("W");
 
+    STONE("S", 111, 111, 111),
+		GRASS("G", 111, 111, 111),
+		WATER("W", 111, 111, 111);
+		
 		public final String printSymbol;
+		public final int red;
+		public final int green;
+		public final int blue;
+		
+		Tile(String printSymbol, int red, int green, int blue) {
 
-		Tile(String printSymbol) {
-			this.printSymbol = printSymbol;
+      this.printSymbol = printSymbol;
+			this.red = red;
+			this.green = green;
+			this.blue = blue;
 		}
 	}
 
