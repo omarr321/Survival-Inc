@@ -140,8 +140,7 @@ public abstract class Entity {
 	}
 	
 	public abstract void setLayer(int layer);
-
 	public abstract int getLayer();
-	
+	public abstract String getType();
 	public abstract String getPrintSymbol();
 }

@@ -2,7 +2,9 @@ package entities;
 
 import backEnd.Map;
 
-public class Player extends Entity{
+public class Player extends Entity {
+	
+	public final String ENTITY_TYPE = "Player";
 	
 	private int health;
 	private int layer = 256;
@@ -36,5 +38,15 @@ public class Player extends Entity{
 	@Override
 	public int getLayer() {
 		return layer;
+	}
+	
+	/*
+	 * Gets the print friendly name of the entitie's type
+	 * 
+	 * @return Print friendly entity type
+	 */
+	@Override
+	public String getType() {
+		return ENTITY_TYPE;
 	}
 }

@@ -20,6 +20,8 @@ public class Map {
 
 	public static final int DEFAULT_SIZE = 24;
 	public static final Tile DEFAULT_TILE = Tile.GRASS;
+	// TODO: Document Final
+	public static final String ALL_ENTITIES = "ALL";
 	
 	private int spawnX;
 	private int spawnY;
@@ -144,6 +146,13 @@ public class Map {
 		}
 	}
 	
+	// TODO: Document Method
+	public void getEntity(ArrayList<Entity> addto, int index, boolean hidden, String type) {
+		if(entities.get(index).getVisibility() == !hidden && (type.equals(Map.ALL_ENTITIES) || type.equals(entities.get(index).getType()))) {
+			addto.add(entities.get(index));
+		}
+	}
+	
 	/*
 	 * Gets all entities on the map.
 	 * 
@@ -160,17 +169,14 @@ public class Map {
 	 * @return All entities on the map
 	 */
 	public ArrayList<Entity> getAllEntities(boolean hidden) {
+		return getAllEntities(hidden, Map.ALL_ENTITIES);
+	}
+	
+	// TODO: Document Method
+	public ArrayList<Entity> getAllEntities(boolean hidden, String type) {
 		ArrayList<Entity> list = new ArrayList<>();
-		if(!hidden) {
-			for(int i = 0; i < entities.size(); i++) {
-				if(entities.get(i).getVisibility()) {
-					list.add(entities.get(i));
-				}
-			}
-		} else {
-			for(int i = 0; i < entities.size(); i++) {
-				list.add(entities.get(i));
-			}
+		for(int i = 0; i < entities.size(); i++) {
+			getEntity(list, i, hidden, type);
 		}
 		
 		return list;
@@ -187,11 +193,23 @@ public class Map {
 		ArrayList list = new ArrayList<>();
 		for(int i = 0; i < entities.size(); i++) {
 			if(entities.get(i).getPosX() == x && entities.get(i).getPosY() == y) {
-				list.add(entities.get(i));
+				getEntity(list, i, false, Map.ALL_ENTITIES);
 			}
 		}
 		return list;
 	}
+	
+	// TODO: Document Method
+	public ArrayList<Entity> getEntitiesInBounds(int x, int y, int w, int h) {
+		ArrayList list = new ArrayList<>();
+		for(int i = 0; i < entities.size(); i++) {
+			if(entities.get(i).getPosX() >= x && entities.get(i).getPosX() <= x+w && entities.get(i).getPosY() >= y && entities.get(i).getPosY() <= y+h) {
+				getEntity(list, i, false, Map.ALL_ENTITIES);
+			}
+		}
+		return list;
+	}
+	
 	/*
 	 * Sets all tiles on the map to fill.
 	 * 

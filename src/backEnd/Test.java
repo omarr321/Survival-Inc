@@ -52,13 +52,45 @@ public class Test {
 		refresh(farm);
 	}
 	
+	public static void test3() {
+		Map world = new Map(8, Tile.STONE);
+		for(int i = 0; i < 3; i++) {
+			new Stick(world, 2, 2+i);
+			new Stick(world, 5+i, 6);
+		}
+		Player j = new Player(world,6,4);
+		
+		ArrayList yeet = world.getEntitiesInBounds(5, 2, 3, 4);
+		yeet.removeIf(n -> n.getClass() != Stick.class);
+		
+		refresh(world);
+	}
+	
 	public static void refresh(Map map) {
 		System.out.printf("Map: %s%n%n", map.getName());
 		System.out.println(map);
 	}
 	
+	public static void consoleMode() {
+		Map box = new Map(12, Tile.GRASS);
+		box.setName("Mince Islands");
+		
+		Player me = new Player(box);
+		new Stick(box, 1, 2);
+		new Stick(box, 2, 2);
+		new Stick(box, 3, 2);
+		
+		if(box.getEntitiesAtPos(3, 2).size() > 0) {
+			box.getEntitiesAtPos(3, 2).get(0).setVisibility(false);
+		}
+		
+		ArrayList<Entity> test = box.getAllEntities(false);
+		
+		refresh(box);
+	}
+	
 	public static void main(String[] args) throws InterruptedException {
-		test2();
+		test3();
 		/*
 		Map cartman = new Map(7, Tile.STONE);
 		Map kyle = new Map(7, Tile.GRASS);

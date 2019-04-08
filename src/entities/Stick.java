@@ -5,6 +5,8 @@ import backEnd.Map;
 
 public class Stick extends Entity {
 	
+	public final String ENTITY_TYPE = "Stick";
+	
 	private int layer = 256;
 	
 	public Stick(Map containedMap, int x, int y) {
@@ -38,5 +40,15 @@ public class Stick extends Entity {
 	@Override
 	public int getLayer() {
 		return layer;
+	}
+
+	/*
+	 * Gets the print friendly name of the entitie's type
+	 * 
+	 * @return Print friendly entity type
+	 */
+	@Override
+	public String getType() {
+		return ENTITY_TYPE;
 	}
 }
