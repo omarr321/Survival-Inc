@@ -13,9 +13,7 @@ public class Test {
 		new Stick(world, 5, 1);
 		new Stick(world, 4, 3);
 		new Stick(world, 6, 6);
-		
-		
-		
+
 		System.out.print(world);
 	}
 }

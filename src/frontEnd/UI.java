@@ -1,6 +1,7 @@
 package frontEnd;
 
 import backEnd.Map;
+import backEnd.Map.Tile;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -14,113 +15,51 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import backEnd.World;
 
 public class UI extends Application {
 	public static int playerX = 4;
 	public static int playerY = 4;
 	public Map colorMap = new Map();
-	
+
 	public static void main(String args[]) {
 		launch(args);
 	}
 
 	public void start(Stage primarystage) {
-		mainMap(primarystage);
+		World world = new World(11);
+		Map map = world.getMap(0, 0);
+		mainMap(primarystage, map);
 	}
 
-	public void mainMap(Stage primarystage) {
-		BorderPane all = new BorderPane();
-		Pane map = new Pane();
-		GridPane mapGrid = new GridPane();
-		Circle player = new Circle(22);
-		// Test
-		Rectangle debug = new Rectangle();
-		debug.setX(32);
-		debug.setY(32);
-		debug.setWidth(32);
-		debug.setHeight(32);
-		debug.setStroke(Color.BLACK);
-		debug.setFill(colorMap.getAverageColor());
-		map.getChildren().add(debug);
-		System.out.println(colorMap.getAverageColor().getRed());
-		System.out.println(colorMap.getAverageColor().getGreen());
-		System.out.println(colorMap.getAverageColor().getBlue());
-		// Test
-		
-		for (int i = 0; i < 9; i++) {
-			for (int j = 0; j < 9; j++) {
-				Rectangle mapSqaure = new Rectangle();
-				mapSqaure.setHeight(50);
-				mapSqaure.setWidth(50);
-				
-				mapSqaure.setFill(colorMap.getColor(j, i));
-				
-				mapSqaure.setStrokeWidth(0);
-				mapGrid.add(mapSqaure, j, i, 1, 1);
+	public void mainMap(Stage primarystage, Map map) {
+		subMap(primarystage, map);
+	}
+
+	public void subMap(Stage primarystage, Map map) {
+		GridPane grid = new GridPane();
+		Pane all = new Pane(grid);
+		for (int i = 0; i < 11; i++) {
+			for (int j = 0; j < 11; j++) {
+				Rectangle rect =  new Rectangle();
+				rect.setStrokeWidth(0);
+				rect.setHeight(50);
+				rect.setWidth(50);
+				Tile tile = map.getTile(i, j);
+				if (tile == Tile.GRASS) {
+					rect.setFill(Color.GREEN);
+				} else if (tile == Tile.STONE) {
+					rect.setFill(Color.GRAY);
+				} else {
+					rect.setFill(Color.BLUE);
+				}
+				grid.add(rect, i, j);
 			}
 		}
-		
-		mapGrid.setGridLinesVisible(true);
-		
-		map.getChildren().addAll(mapGrid, player);
-		
-		all.setCenter(map);
-		all.setPadding(new Insets(0, 0, 0, 0));
-		
-		mapGrid.setLayoutX(275);
-		mapGrid.setLayoutY(275);
-		mapGrid.setHgap(0);
-		mapGrid.setVgap(0);
-		
-		player.setFill(Color.RED);
-		player.setStroke(Color.BLACK);
-		player.setCenterX((playerX + 1) * 100);
-		player.setCenterY((playerY + 1) * 100);
-		
-		player.setOnKeyPressed(new EventHandler<KeyEvent>() {
-			public void handle(KeyEvent event) {
-				if (event.getCode() == KeyCode.A) {
-					System.out.printf("PlayerX: %d%nPlayerY: %d%n", playerX, playerY);
-				}
-				
-				if (event.getCode() == KeyCode.LEFT) {
-					if (playerX > 0) {
-						playerX = playerX - 1;
-						player.setCenterX(player.getCenterX()-50);
-					} else {
-						System.out.println("Cant go that way!");
-					}
-				} else if (event.getCode() == KeyCode.RIGHT){
-					if (playerX < 8) {
-						playerX = playerX + 1;
-						player.setCenterX(player.getCenterX()+50);
-					} else {
-						System.out.println("Cant go that way!");
-					}
-					
-				} else if (event.getCode() == KeyCode.UP) {
-					if (playerY > 0) {
-						playerY = playerY - 1;
-						player.setCenterY(player.getCenterY()-50);
-					} else {
-						System.out.println("Cant go that way!");
-					}
-				} else if (event.getCode() == KeyCode.DOWN) {
-					if (playerY < 8) {
-						playerY = playerY + 1;
-						player.setCenterY(player.getCenterY()+50);
-					} else {
-						System.out.println("Cant go that way!");
-					}
-				}
-			}
-		});
-		
-		Scene scene = new Scene(all, 1000, 1000);
-		primarystage.setTitle("Survival Inc.");
+		grid.setGridLinesVisible(true);
+		Scene scene = new Scene(all);
 		primarystage.setScene(scene);
 		primarystage.show();
 		
-		player.requestFocus();
 	}
 }
