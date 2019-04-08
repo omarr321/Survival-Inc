@@ -15,7 +15,7 @@ public class Test {
 		new Stick(world, 6, 6);
 		
 		new Player(world, 7, 2);
-		
+
 		System.out.print(world);
 		
 		
