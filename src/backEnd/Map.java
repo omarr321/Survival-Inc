@@ -1,5 +1,6 @@
 package backEnd;
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 import entities.*;
 
@@ -145,43 +146,28 @@ public class Map {
 			return null;
 		}
 	}
-	
-	// TODO: Document Method
-	public void getEntity(ArrayList<Entity> addto, int index, boolean hidden, String type) {
-		if(entities.get(index).getVisibility() == !hidden && (type.equals(Map.ALL_ENTITIES) || type.equals(entities.get(index).getType()))) {
-			addto.add(entities.get(index));
-		}
+	// TODO: Document
+	public ArrayList<Entity> getVisibleEntities() {
+		return getAllEntities(n -> n.getVisibility());
 	}
 	
 	/*
 	 * Gets all entities on the map.
 	 * 
+	 * @param filter Pass a lambda function to filter entities by their properties.
 	 * @return All entities on the map
 	 */
-	public ArrayList<Entity> getAllEntities() {
-		return getAllEntities(false);
-	}
 	
-	/*
-	 * Gets all entities on the map.
-	 * 
-	 * @param hidden Includes entities on map that are hidden or invisible.
-	 * @return All entities on the map
-	 */
-	public ArrayList<Entity> getAllEntities(boolean hidden) {
-		return getAllEntities(hidden, Map.ALL_ENTITIES);
-	}
-	
-	// TODO: Document Method
-	public ArrayList<Entity> getAllEntities(boolean hidden, String type) {
+	public ArrayList<Entity> getAllEntities(Predicate<? super Entity> filter) {
 		ArrayList<Entity> list = new ArrayList<>();
 		for(int i = 0; i < entities.size(); i++) {
-			getEntity(list, i, hidden, type);
+			list.add(entities.get(i));
 		}
 		
+		list.removeIf(filter.negate());
 		return list;
 	}
-	
+
 	/*
 	 * Gets all entities that exists at a specific position.
 	 * 
@@ -190,13 +176,7 @@ public class Map {
 	 * @return The list of entities found at that position.
 	 */
 	public ArrayList<Entity> getEntitiesAtPos(int x, int y) {
-		ArrayList list = new ArrayList<>();
-		for(int i = 0; i < entities.size(); i++) {
-			if(entities.get(i).getPosX() == x && entities.get(i).getPosY() == y) {
-				getEntity(list, i, false, Map.ALL_ENTITIES);
-			}
-		}
-		return list;
+		return getAllEntities(n -> n.getPosX() == x && n.getPosY() == y);
 	}
 	
 	// TODO: Document Method
@@ -204,7 +184,7 @@ public class Map {
 		ArrayList list = new ArrayList<>();
 		for(int i = 0; i < entities.size(); i++) {
 			if(entities.get(i).getPosX() >= x && entities.get(i).getPosX() <= x+w && entities.get(i).getPosY() >= y && entities.get(i).getPosY() <= y+h) {
-				getEntity(list, i, false, Map.ALL_ENTITIES);
+				list.add(entities.get(i));
 			}
 		}
 		return list;
