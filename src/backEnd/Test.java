@@ -14,8 +14,7 @@ public class Test {
 		new Stick(world, 4, 3);
 		new Stick(world, 6, 6);
 		
-		world.getEntitiesAtPos(3, 1).forEach(n -> n.setVisibility(false));
-		ArrayList<Entity> test = world.getVisibleEntities();
+		
 		
 		System.out.print(world);
 	}

@@ -146,10 +146,6 @@ public class Map {
 			return null;
 		}
 	}
-	// TODO: Document
-	public ArrayList<Entity> getVisibleEntities() {
-		return getAllEntities(n -> n.getVisibility());
-	}
 	
 	/*
 	 * Gets all entities on the map.
@@ -168,6 +164,10 @@ public class Map {
 		return list;
 	}
 
+	// TODO: Document
+	public ArrayList<Entity> getVisibleEntities() {
+		return getAllEntities(n -> n.getVisibility());
+	}
 	/*
 	 * Gets all entities that exists at a specific position.
 	 * 
@@ -178,16 +178,10 @@ public class Map {
 	public ArrayList<Entity> getEntitiesAtPos(int x, int y) {
 		return getAllEntities(n -> n.getPosX() == x && n.getPosY() == y);
 	}
-	
+
 	// TODO: Document Method
 	public ArrayList<Entity> getEntitiesInBounds(int x, int y, int w, int h) {
-		ArrayList list = new ArrayList<>();
-		for(int i = 0; i < entities.size(); i++) {
-			if(entities.get(i).getPosX() >= x && entities.get(i).getPosX() <= x+w && entities.get(i).getPosY() >= y && entities.get(i).getPosY() <= y+h) {
-				list.add(entities.get(i));
-			}
-		}
-		return list;
+		return getAllEntities(n -> n.getPosX() >= x && n.getPosX() <= x+w && n.getPosY() >= y && n.getPosY() <= y+h);
 	}
 	
 	/*
