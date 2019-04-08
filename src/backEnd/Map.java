@@ -1,156 +1,361 @@
 package backEnd;
 
-import javafx.scene.paint.Color;
+import java.util.ArrayList;
+import java.util.function.Predicate;
 
+import entities.*;
+
+/*
+ * A game environment for entities to exist in. Each Map instance
+ * contains a 2D array of tiles. Tiles represent the terrain of
+ * the map which is an enumerated list of selectable landscape.
+ * 
+ * Entities can be binded to a Map and stored in a linear array,
+ * Here, they are provided methods that allows for interaction with
+ * neighboring entities. The front end job of the Map is to provide
+ * data to the UI class on all render-able entities and tiles and their
+ * positions and shapes.
+ * 
+ * @author Wyatt Phillips
+ */
 public class Map {
-	private Color map_color;
-	private Color[][] map = new Color[9][9];
-	final private static Color Grass = Color.rgb(10, 151, 0);
-	final private static Color Water = Color.rgb(0, 65, 245);
-	final private static Color Stone = Color.rgb(141, 141, 141);
 
-	public Map() {
-		for (int i = 0; i < 9; i++) {
-			for (int j = 0; j < 9; j++) {
-				int random = Math.toIntExact(Math.round(Math.random() * 9));
-				switch (random) {
-				case 0:
-				case 1:
-				case 2:
-				case 3:
-				case 4:
-				case 5:
-					map[j][i] = Grass;
-					break;
-				case 6:
-				case 7:
-					map[j][i] = Stone;
-					break;
-				case 8:
-				case 9:
-					map[j][i] = Water;
-				}
-			}
-		}
-		for (int l = 0; l <= 2; l++) {
-			for (int i = 0; i < 9; i++) {
-				for (int j = 0; j < 9; j++) {
-					map[j][i] = calcColor(j, i);
-				}
-			}
+	public static final int DEFAULT_SIZE = 24;
+	public static final Tile DEFAULT_TILE = Tile.GRASS;
+	// TODO: Document Final
+	public static final String ALL_ENTITIES = "ALL";
+
+	private int spawnX;
+	private int spawnY;
+	private String printname = "Untitled Map";
+
+	public enum Tile {
+		STONE("S"), GRASS("G"), WATER("W");
+
+		public final String printSymbol;
+
+		Tile(String printSymbol) {
+			this.printSymbol = printSymbol;
 		}
 	}
 
-	/**
-	 * Returns a color that is the average of all tiles on the map
+	private Tile[][] tilegrid;
+	private ArrayList<Entity> entities;
+
+	/*
+	 * Constructor.
 	 * 
-	 * @return Average Color
+	 * @param width The amount of tiles that expand horizontally
+	 * 
+	 * @param height The amount of tiles that expand vertically
+	 * 
+	 * @param spawnX The default spawn point X for all entities
+	 * 
+	 * @param spawnY The default spawn point Y for all entities
+	 * 
+	 * @param fill The tile that will fill the entire map
 	 */
-	public Color getAverageColor() {
-		double[] average = new double[3];
-		
-		// Get sum of all RBG values
-		for(int i = 0; i < map.length; i++) {
-			for(int j = 0; j < map[0].length; j++) {
-				average[0] += getColor(j,i).getRed();
-				average[1] += getColor(j,i).getGreen();
-				average[2] += getColor(j,i).getBlue();
-			}
-		}
-		
-		average[0] /= (double) (map.length * map[0].length);
-		average[1] /= (double) (map.length * map[0].length);
-		average[2] /= (double) (map.length * map[0].length);
-		
-		return new Color(average[0],average[1],average[2],1);
-	}
-	
-	public Color getColor(int x, int y) {
-		return map[x][y];
+	public Map(int width, int height, int spawnX, int spawnY, Tile fill) {
+		this.entities = new ArrayList<Entity>();
+
+		this.spawnX = spawnX;
+		this.spawnY = spawnY;
+		tilegrid = new Tile[height][width];
+		tileFill(fill);
 	}
 
-	private String getColorType(int x, int y) {
-		if (map[x][y] == Grass) {
-			return "Grass";
-		} else if (map[x][y] == Stone) {
-			return "Stone";
-		} else if (map[x][y] == Water) {
-			return "Water";
+	/*
+	 * Constructor. Spawn is automatically set to the center of the map.
+	 * 
+	 * @param width The amount of tiles that expand horizontally
+	 * 
+	 * @param height The amount of tiles that expand vertically
+	 * 
+	 * @param fill The tile that will fill the entire map
+	 */
+	public Map(int width, int height, Tile fill) {
+		this(width, height, width / 2, height / 2, fill);
+	}
+
+	/*
+	 * Constructor. Aspect ratio of map is 1:1 and spawns are auto set to map
+	 * center.
+	 * 
+	 * @param The amount of tiles that expand horizontally and vertically (size =
+	 * width = height)
+	 * 
+	 * @param fill The tile that will fill the entire map
+	 */
+	public Map(int size, Tile fill) {
+		this(size, size, fill);
+	}
+
+	/*
+	 * Constructor. Width and Height are both set to DEFAULT_SIZE and spawn is
+	 * centered.
+	 * 
+	 * @param fill The tile that will fill the entire map
+	 */
+	public Map(Tile fill) {
+		this(DEFAULT_SIZE, DEFAULT_SIZE, fill);
+	}
+
+	/*
+	 * Constructor. Width and Height are both set to DEFAULT_SIZE, spawn is
+	 * centered, and default tile is DEFAULT_TILE.
+	 */
+	public Map() {
+		this(DEFAULT_SIZE, DEFAULT_SIZE, DEFAULT_TILE);
+	}
+
+	/*
+	 * Get the printer friendly name of the map.
+	 * 
+	 * @return String name.
+	 */
+	public String getName() {
+		return printname;
+	}
+
+	/*
+	 * Sets the printer friendly name of the map.
+	 * 
+	 * @param name String name.
+	 */
+	public void setName(String name) {
+		printname = name;
+	}
+
+	/*
+	 * Sets a tile at a valid position
+	 * 
+	 * @param x The x location of the tile (must be in bounds)
+	 * 
+	 * @param y The y location of the tile (must be in bounds)
+	 */
+	public void setTile(int x, int y, Tile tile) {
+		if (isValidPosition(x, y)) {
+			tilegrid[y][x] = tile;
+		}
+	}
+
+	/*
+	 * Gets a tile from a valid position
+	 * 
+	 * @param x The x location of the tile (must be in bounds)
+	 * 
+	 * @param y The y location of the tile (must be in bounds)
+	 * 
+	 * @return The tile at (x,y)
+	 */
+	public Tile getTile(int x, int y) {
+		if (isValidPosition(x, y)) {
+			return tilegrid[y][x];
 		} else {
 			return null;
 		}
 	}
 
-	private Color checkColor(Color c, int xOffSet, int yOffSet, int x, int y) {
-		String temp = "";
-		try {
-			temp = getColorType(x + xOffSet, y + yOffSet);
-		} catch (ArrayIndexOutOfBoundsException ex) {
+	/*
+	 * Gets all entities on the map.
+	 * 
+	 * @param filter Pass a lambda function to filter entities by their properties.
+	 * 
+	 * @return All entities on the map
+	 */
+
+	public ArrayList<Entity> getAllEntities(Predicate<? super Entity> filter) {
+		ArrayList<Entity> list = new ArrayList<>();
+		for (int i = 0; i < entities.size(); i++) {
+			list.add(entities.get(i));
 		}
-		if (temp == "Grass") {
-			return Grass;
-		} else if (temp == "Water") {
-			return Water;
-		} else if (temp == "Stone") {
-			return Stone;
-		} else {
-			return c;
+
+		list.removeIf(filter.negate());
+		return list;
+	}
+
+	// TODO: Document
+	public ArrayList<Entity> getVisibleEntities() {
+		return getAllEntities(n -> n.getVisibility());
+	}
+
+	/*
+	 * Gets all entities that exists at a specific position.
+	 * 
+	 * @param x The x position to look for entities.
+	 * 
+	 * @param y The y position to look for entities.
+	 * 
+	 * @return The list of entities found at that position.
+	 */
+	public ArrayList<Entity> getEntitiesAtPos(int x, int y) {
+		return getAllEntities(n -> n.getPosX() == x && n.getPosY() == y);
+	}
+
+	// TODO: Document Method
+	public ArrayList<Entity> getEntitiesInBounds(int x, int y, int w, int h) {
+		return getAllEntities(
+				n -> n.getPosX() >= x && n.getPosX() <= x + w && n.getPosY() >= y && n.getPosY() <= y + h);
+	}
+
+	/*
+	 * Sets all tiles on the map to fill.
+	 * 
+	 * @param fill The tile that will replace every tile on the map.
+	 */
+	public void tileFill(Tile fill) {
+		for (int y = 0; y < getHeight(); y++) {
+			for (int x = 0; x < getWidth(); x++) {
+				setTile(x, y, fill);
+			}
 		}
 	}
-	
-	private Color calcColor(int x, int y) {
-		int random = Math.toIntExact(Math.round(Math.random() * 23));
-		switch (random) {
-		case 0:
-			checkColor(Grass, -1, -1, x, y);
-		case 1:
-			checkColor(Water, -1, -1, x, y);
-		case 2:
-			checkColor(Stone, -1, -1, x, y);
-		case 3:
-			checkColor(Grass, -1, 0, x, y);
-		case 4:
-			checkColor(Water, -1, 0, x, y);
-		case 5:
-			checkColor(Stone, -1, 0, x, y);
-		case 6:
-			checkColor(Grass, -1, 1, x, y);
-		case 7:
-			checkColor(Water, -1, 1, x, y);
-		case 8:
-			checkColor(Stone, -1, 1, x, y);
-		case 9:
-			checkColor(Grass, 0, 1, x, y);
-		case 10:
-			checkColor(Water, 0, 1, x, y);
-		case 11:
-			checkColor(Stone, 0, 1, x, y);
-		case 12:
-			checkColor(Grass, 1, 1, x, y);
-		case 13:
-			checkColor(Water, 1, 1, x, y);
-		case 14:
-			checkColor(Stone, 1, 1, x, y);
-		case 15:
-			checkColor(Grass, 1, 0, x, y);
-		case 16:
-			checkColor(Water, 1, 0, x, y);
-		case 17:
-			checkColor(Stone, 1, 0, x, y);
-		case 18:
-			checkColor(Grass, 1, -1, x, y);
-		case 19:
-			checkColor(Water, 1, -1, x, y);
-		case 20:
-			checkColor(Stone, 1, -1, x, y);
-		case 21:
-			checkColor(Grass, 0, -1, x, y);
-		case 22:
-			checkColor(Water, 0, -1, x, y);
-		case 23:
-			checkColor(Stone, 0, -1, x, y);
-		default:
-			return Grass;
+
+	/*
+	 * Gets current width of the map in units of tiles
+	 * 
+	 * @return The amount of tiles that expand horizontally
+	 */
+	public int getWidth() {
+		return tilegrid[0].length;
+	}
+
+	/*
+	 * Gets current height of the map in units of tiles
+	 * 
+	 * @return The amount of tiles that expand vertically
+	 */
+	public int getHeight() {
+		return tilegrid.length;
+	}
+
+	/*
+	 * Checks if the provided position is in bounds of the map
+	 * 
+	 * @param x The x position on the map
+	 * 
+	 * @param y The y position on the map
+	 * 
+	 * @return if the (x,y) coordinate is in bounds of the map space
+	 */
+	public boolean isValidPosition(int x, int y) {
+		return x >= 0 && x < getWidth() && y >= 0 && y < getHeight();
+	}
+
+	/*
+	 * Obtains the default x spawn position for entities
+	 * 
+	 * @return x co-ordinate for spawn
+	 */
+	public int getDefaultSpawnX() {
+		return spawnX;
+	}
+
+	/*
+	 * Obtains the default y spawn position for entities
+	 * 
+	 * @return y co-ordinate for spawn
+	 */
+	public int getDefaultSpawnY() {
+		return spawnY;
+	}
+
+	/*
+	 * Sets the spawn location for all entities. Sets to previous of co-ordinates
+	 * are invalid to map.
+	 * 
+	 * @param x The x co-ordinate for spawn (Must be in bounds)
+	 * 
+	 * @param y The y co-ordinate for spawn (Must be in bounds)
+	 */
+	public void setDefaultSpawn(int x, int y) {
+		if (isValidPosition(x, y)) {
+			spawnX = x;
+			spawnY = y;
 		}
+	}
+
+	/*
+	 * Adds an entity to the list. Can only be called under the following
+	 * conditions: 1) Entity must not exist on another Map's list. 2) Entity must
+	 * have it's map reference set to this Map instance. 3) Position must be valid
+	 * to render properly.
+	 * 
+	 * @return The entity added to the list.
+	 */
+	public Entity addEntity(Entity entity) {
+		if (!entities.contains(entity)) {
+			entities.add(entity);
+			return entity;
+		} else {
+			return null;
+		}
+	}
+
+	/*
+	 * Removes the entity from the list. Assuming only one of the same reference
+	 * exists.
+	 * 
+	 * @return The entity removed from the list.
+	 */
+	public Entity removeEntity(Entity entity) {
+		if (entities.contains(entity)) {
+			entities.remove(entity);
+			return entity;
+		} else {
+			return null;
+		}
+
+	}
+
+	/*
+	 * Returns a ASCII visual of the map. For debugging purposes of UI is not
+	 * working. (Ex):
+	 * 
+	 * | [G][G][S] | | [G][S][S] | | [G][G][S] |
+	 * 
+	 * @return A string that is a printer friendly map visual.
+	 */
+	@Override
+	public String toString() {
+
+		// Separate all entities by position and determine if entities overlap by layer
+		// presidence
+		String[][] overlay = new String[getWidth()][getHeight()];
+		for (int i = 0; i < getHeight(); i++) {
+			for (int j = 0; j < getWidth(); j++) {
+				ArrayList<Entity> temp = getEntitiesAtPos(j, i);
+				int index = 0;
+
+				for (int k = 0; k < temp.size(); k++) {
+					if (temp.get(k).getLayer() >= temp.get(index).getLayer()) {
+						index = k;
+					}
+				}
+
+				if (temp.size() > 0) {
+					overlay[i][j] = temp.get(index).getPrintSymbol();
+				}
+			}
+		}
+
+		// Begin to print the viewport using overlay
+		StringBuilder grid = new StringBuilder();
+		for (int y = 0; y < getHeight(); y++) {
+			grid.append("| ");
+			for (int x = 0; x < getWidth(); x++) {
+				grid.append("[");
+
+				if (overlay[y][x] != null) {
+					grid.append(overlay[y][x]);
+				} else {
+					grid.append(getTile(x, y).printSymbol);
+				}
+				grid.append("]");
+			}
+			grid.append(" |\n");
+		}
+
+		return grid.toString();
 	}
 }
