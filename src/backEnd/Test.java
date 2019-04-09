@@ -36,10 +36,12 @@ public class Test {
 		world.setName("Cedar Point");
 		Player me = new Player(world);
 		
-		generateScene(world, 20);
+		//generateScene(world, 20);
 		
 		System.out.print("Name your player: ");
 		me.setPlayerName(sc.nextLine());
+		
+		world.getAverageTile();
 		
 		while(!exit) {
 			printGUI(world, me);

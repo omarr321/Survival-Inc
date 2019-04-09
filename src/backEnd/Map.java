@@ -166,7 +166,7 @@ public class Map {
 		}
 	}
 	
-	public Tile getAverageTile() {
+	public void getAverageTile() {
 		HashMap<Tile, Integer> hm = new HashMap<Tile, Integer>();
 		for(int y = 0; y < getHeight(); y++) {
 			for(int x = 0; x < getWidth(); x++) {
