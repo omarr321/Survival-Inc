@@ -16,6 +16,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import backEnd.World;
+import entities.Player;
 
 public class UI extends Application {
 	public static int playerX = 4;
@@ -30,16 +31,22 @@ public class UI extends Application {
 		World world = new World(11);
 		Map map = world.getMap(0, 0);
 		map.tileFill(Tile.STONE);
-		mainMap(primarystage, map);
+		Player player = new Player(map, 5, 5);
+		mainMap(primarystage, map, player);
 	}
 
-	public void mainMap(Stage primarystage, Map map) {
-		subMap(primarystage, map);
+	public void mainMap(Stage primarystage, Map map, Player player) {
+		subMap(primarystage, map, player);
 	}
 
-	public void subMap(Stage primarystage, Map map) {
+	public void subMap(Stage primarystage, Map map, Player player) {
 		GridPane grid = new GridPane();
 		Pane all = new Pane(grid);
+		Circle you = new Circle();
+		you.setStroke(Color.BLACK);
+		you.setFill(Color.RED);
+		you.setStrokeWidth(2);
+		you.setRadius(24);
 		for (int i = 0; i < 11; i++) {
 			for (int j = 0; j < 11; j++) {
 				Rectangle rect =  new Rectangle();
@@ -53,9 +60,53 @@ public class UI extends Application {
 				grid.add(rect, i, j);
 			}
 		}
+		grid.add(you, player.getPosY(), player.getPosX());
 		grid.setGridLinesVisible(true);
+		
+		grid.setLayoutX(500 - 275);
+		grid.setLayoutY(500 - 275);
+		
 		Scene scene = new Scene(all);
+		
+		scene.addEventHandler(KeyEvent.ANY, new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent event) {
+				if(event.getCode() == KeyCode.LEFT) {
+					player.move(-1, 0);
+					grid.getChildren().remove(you);
+					grid.add(you, player.getPosX(), player.getPosY());
+					System.out.printf("(%d,%d)%n", player.getPosX(), player.getPosY());
+				}
+				
+				if(event.getCode() == KeyCode.RIGHT) {
+					player.move(1, 0);
+					grid.getChildren().remove(you);
+					grid.add(you, player.getPosX(), player.getPosY());
+					System.out.printf("(%d,%d)%n", player.getPosX(), player.getPosY());
+				}
+				
+				if(event.getCode() == KeyCode.UP) {
+					player.move(0, -1);
+					grid.getChildren().remove(you);
+					grid.add(you, player.getPosX(), player.getPosY());
+					System.out.printf("(%d,%d)%n", player.getPosX(), player.getPosY());
+				}
+				
+				if(event.getCode() == KeyCode.DOWN) {
+					player.move(0, 1);
+					grid.getChildren().remove(you);
+					grid.add(you, player.getPosX(), player.getPosY());
+					System.out.printf("(%d,%d)%n", player.getPosX(), player.getPosY());
+				}
+			}
+			
+		});
+		
 		primarystage.setScene(scene);
+		primarystage.setWidth(1000);
+		primarystage.setHeight(1000);
+		primarystage.setTitle("Survival Inc.");
+		primarystage.setResizable(false);
 		primarystage.show();
 		
 	}
