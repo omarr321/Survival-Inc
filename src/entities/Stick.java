@@ -6,8 +6,7 @@ import backEnd.Map;
 public class Stick extends Entity {
 	
 	public final String ENTITY_TYPE = "Stick";
-	
-	private int layer = 256;
+	private int layer = 0;
 	
 	public Stick(Map containedMap, int x, int y) {
 		super(containedMap, x, y);

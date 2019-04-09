@@ -157,9 +157,8 @@ public class Map {
 	 * Gets all entities on the map.
 	 * 
 	 * @param filter Pass a lambda function to filter entities by their properties.
-	 * @return All entities on the map
+	 * @return All entities on the map that meet the filter specs.
 	 */
-	
 	public ArrayList<Entity> getAllEntities(Predicate<? super Entity> filter) {
 		ArrayList<Entity> list = new ArrayList<>();
 		for(int i = 0; i < entities.size(); i++) {
@@ -169,11 +168,47 @@ public class Map {
 		list.removeIf(filter.negate());
 		return list;
 	}
+	
+	/*
+	 * Gets all entities on the map.
+	 * 
+	 * @return All entities on the map
+	 */
+	public ArrayList<Entity> getAllEntities() {
+		return getAllEntities(n -> true);
+	}
+	
+	/*
+	 * Gets all visible entities on the map that meet the filter requirement.
+	 * 
+	 * @param filter Pass a lambda function to filter entities by their properties.
+	 * @return All visible entities on the map that meet filter.
+	 */
+	public ArrayList<Entity> getVisibleEntities(Predicate<? super Entity> filter) {
+		return getAllEntities(n -> n.getVisibility() && filter.test(n));
+	}
 
-	// TODO: Document
+	/*
+	 * Gets all visible entities on the map.
+	 * 
+	 * @return All visible entities on the map
+	 */
 	public ArrayList<Entity> getVisibleEntities() {
 		return getAllEntities(n -> n.getVisibility());
 	}
+	
+	/*
+	 * Gets all entities that exists at a specific position and meet the filter requirements.
+	 * 
+	 * @param x The x position to look for entities.
+	 * @param y The y position to look for entities.
+	 * @param filter Pass a lambda function to filter entities by their properties.
+	 * @return The list of entities found at that position.
+	 */
+	public ArrayList<Entity> getEntitiesAtPos(int x, int y, Predicate<? super Entity> filter) {
+		return getAllEntities(n -> n.getPosX() == x && n.getPosY() == y && filter.test(n));
+	}
+	
 	/*
 	 * Gets all entities that exists at a specific position.
 	 * 
@@ -184,8 +219,30 @@ public class Map {
 	public ArrayList<Entity> getEntitiesAtPos(int x, int y) {
 		return getAllEntities(n -> n.getPosX() == x && n.getPosY() == y);
 	}
+	
+	/*
+	 * Gets all entities that exists within the bounds of the map and meet the filter requirements.
+	 * 
+	 * @param x The x position of the upper-left corner of the bounds to start at
+	 * @param y The y position of the upper-left corner of the bounds to start at
+	 * @param w The width of the bounds in relation to x.
+	 * @param h The height of the bounds in relation to y.
+	 * @param filter Pass a lambda function to filter entities by their properties.
+	 * @return The list of entities found in the bounds.
+	 */
+	public ArrayList<Entity> getEntitiesInBounds(int x, int y, int w, int h, Predicate<? super Entity> filter) {
+		return getAllEntities(n -> n.getPosX() >= x && n.getPosX() <= x+w && n.getPosY() >= y && n.getPosY() <= y+h && filter.test(n));
+	}
 
-	// TODO: Document Method
+	/*
+	 * Gets all entities that exists within the bounds of the map.
+	 * 
+	 * @param x The x position of the upper-left corner of the bounds to start at
+	 * @param y The y position of the upper-left corner of the bounds to start at
+	 * @param w The width of the bounds in relation to x.
+	 * @param h The height of the bounds in relation to y.
+	 * @return The list of entities found in the bounds.
+	 */
 	public ArrayList<Entity> getEntitiesInBounds(int x, int y, int w, int h) {
 		return getAllEntities(n -> n.getPosX() >= x && n.getPosX() <= x+w && n.getPosY() >= y && n.getPosY() <= y+h);
 	}

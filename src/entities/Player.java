@@ -5,9 +5,11 @@ import backEnd.Map;
 public class Player extends Entity {
 	
 	public final String ENTITY_TYPE = "Player";
-	
-	private int health;
 	private int layer = 256;
+	
+	private String player_name = "Person";
+	private int health = 100;
+	private int xp = 0;
 	
 	public Player(Map containedMap, int x, int y) {
 		super(containedMap, x, y);
@@ -15,6 +17,30 @@ public class Player extends Entity {
 	
 	public Player(Map containedMap) {
 		super(containedMap);
+	}
+	
+	public String getPlayerName() {
+		return player_name;
+	}
+	
+	public void setPlayerName(String name) {
+		this.player_name = name;
+	}
+	
+	public int getHealth() {
+		return health;
+	}
+	
+	public void setHealth(int health) {
+		this.health = health;
+	}
+
+	public int getXP() {
+		return xp;
+	}
+	
+	public void setXP(int xp) {
+		this.xp = xp;
 	}
 	
 	public String getPrintSymbol() {
