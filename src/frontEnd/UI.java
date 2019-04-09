@@ -46,9 +46,9 @@ public class UI extends Application {
 				rect.setHeight(50);
 				rect.setWidth(50);
 				Tile tile = map.getTile(i, j);
-				if (tile == Tile.GRASS) {
+				if (tile.equals(Tile.GRASS)) {
 					rect.setFill(Color.GREEN);
-				} else if (tile == Tile.STONE) {
+				} else if (tile.equals(Tile.STONE)) {
 					rect.setFill(Color.GRAY);
 				} else {
 					rect.setFill(Color.BLUE);
