@@ -1,22 +1,78 @@
 package entities;
 
+import java.util.ArrayList;
+
 import backEnd.Map;
+import backEnd.Map.Tile;
 
 public class Player extends Entity {
 
 	public final String ENTITY_TYPE = "Player";
+<<<<<<< refs/remotes/origin/BaseCode
 
 	private int health;
 	private int layer = 256;
 
+=======
+	private int layer = 256;
+	
+	private String player_name = "Person";
+	private int health = 100;
+	private int xp = 0;
+	private Map inventory;
+	
+>>>>>>> Created test in shell for back-end engine.
 	public Player(Map containedMap, int x, int y) {
 		super(containedMap, x, y);
+		this.inventory = new Map(1, 1, 0, 0, Tile.STONE);
 	}
 
 	public Player(Map containedMap) {
 		super(containedMap);
+		this.inventory = new Map(1, 1, 0, 0, Tile.STONE);
+	}
+	
+	/*
+	 * Player will add all items in their position to their inventory.
+	 */
+	public void pickUpEntities() {
+		ArrayList<Entity> ent = containedMap.getEntitiesAtPos(getPosX(), getPosY(), n -> n.isStorable());
+		ent.remove(this);
+		ent.forEach(n -> n.moveToMap(inventory));
+	}
+<<<<<<< refs/remotes/origin/BaseCode
+
+=======
+	
+	public String getPlayerName() {
+		return player_name;
+	}
+	
+	public void setPlayerName(String name) {
+		this.player_name = name;
+	}
+	
+	public Map getInventory() {
+		return this.inventory;
+	}
+	
+	public int getHealth() {
+		return health;
+	}
+	
+	public void setHealth(int health) {
+		this.health = health;
 	}
 
+	public int getXP() {
+		return xp;
+	}
+	
+	public void setXP(int xp) {
+		this.xp = xp;
+	}
+	
+>>>>>>> Created test in shell for back-end engine.
 	public String getPrintSymbol() {
 		return "*";
 	}
@@ -50,5 +106,10 @@ public class Player extends Entity {
 	@Override
 	public String getType() {
 		return ENTITY_TYPE;
+	}
+
+	@Override
+	public boolean isStorable() {
+		return false;
 	}
 }
