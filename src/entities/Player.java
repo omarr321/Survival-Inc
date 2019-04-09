@@ -8,12 +8,7 @@ import backEnd.Map.Tile;
 public class Player extends Entity {
 
 	public final String ENTITY_TYPE = "Player";
-<<<<<<< refs/remotes/origin/BaseCode
-
-	private int health;
-	private int layer = 256;
-
-=======
+	
 	private int layer = 256;
 	
 	private String player_name = "Person";
@@ -21,7 +16,7 @@ public class Player extends Entity {
 	private int xp = 0;
 	private Map inventory;
 	
->>>>>>> Created test in shell for back-end engine.
+	
 	public Player(Map containedMap, int x, int y) {
 		super(containedMap, x, y);
 		this.inventory = new Map(1, 1, 0, 0, Tile.STONE);
@@ -40,11 +35,7 @@ public class Player extends Entity {
 		ent.remove(this);
 		ent.forEach(n -> n.moveToMap(inventory));
 	}
-<<<<<<< refs/remotes/origin/BaseCode
-
-=======
-	
-	public String getPlayerName() {
+		public String getPlayerName() {
 		return player_name;
 	}
 	
@@ -72,7 +63,7 @@ public class Player extends Entity {
 		this.xp = xp;
 	}
 	
->>>>>>> Created test in shell for back-end engine.
+
 	public String getPrintSymbol() {
 		return "*";
 	}

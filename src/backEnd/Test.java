@@ -24,7 +24,7 @@ public class Test {
 	
 	public static void generateScene(Map map, int iterations) {
 		for(int i = 0; i < iterations; i++) {
-			new Tree(map, (int) (Math.random()*map.getWidth()), (int) (Math.random()*map.getHeight()));
+			//new Tree(map, (int) (Math.random()*map.getWidth()), (int) (Math.random()*map.getHeight()));
 		}
 	}
 	
