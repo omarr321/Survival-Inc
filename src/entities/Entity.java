@@ -143,9 +143,10 @@ public abstract class Entity {
 	public void setVisibility(boolean visible) {
 		this.visible = visible;
 	}
-
-	public abstract void setLayer(int layer);
-
+	
+	public void setLayer(int layer) {
+		
+	}
 	public abstract int getLayer();
 
 	public abstract String getType();
