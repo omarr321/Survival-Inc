@@ -1,6 +1,7 @@
 package backEnd;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.function.Predicate;
 
 import entities.*;
@@ -163,6 +164,22 @@ public class Map {
 		} else {
 			return null;
 		}
+	}
+	
+	public Tile getAverageTile() {
+		HashMap<Tile, Integer> hm = new HashMap<Tile, Integer>();
+		for(int y = 0; y < getHeight(); y++) {
+			for(int x = 0; x < getWidth(); x++) {
+				Tile key = getTile(x, y);
+				if(hm.containsKey(key)) {
+					int value = hm.get(key);
+					hm.put(key, value + 1);
+				} else {
+					hm.put(key, 0);
+				}
+			}
+		}
+		
 	}
 
 	/*
