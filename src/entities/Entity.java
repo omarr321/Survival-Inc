@@ -146,4 +146,5 @@ public abstract class Entity {
 	public abstract int getLayer();
 	public abstract String getType();
 	public abstract String getPrintSymbol();
+	public abstract boolean isStorable();
 }

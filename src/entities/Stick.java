@@ -50,4 +50,9 @@ public class Stick extends Entity {
 	public String getType() {
 		return ENTITY_TYPE;
 	}
+
+	@Override
+	public boolean isStorable() {
+		return true;
+	}
 }

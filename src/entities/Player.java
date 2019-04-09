@@ -1,6 +1,9 @@
 package entities;
 
+import java.util.ArrayList;
+
 import backEnd.Map;
+import backEnd.Map.Tile;
 
 public class Player extends Entity {
 	
@@ -10,13 +13,25 @@ public class Player extends Entity {
 	private String player_name = "Person";
 	private int health = 100;
 	private int xp = 0;
+	private Map inventory;
 	
 	public Player(Map containedMap, int x, int y) {
 		super(containedMap, x, y);
+		this.inventory = new Map(1, 1, 0, 0, Tile.STONE);
 	}
 	
 	public Player(Map containedMap) {
 		super(containedMap);
+		this.inventory = new Map(1, 1, 0, 0, Tile.STONE);
+	}
+	
+	/*
+	 * Player will add all items in their position to their inventory.
+	 */
+	public void pickUpEntities() {
+		ArrayList<Entity> ent = containedMap.getEntitiesAtPos(getPosX(), getPosY(), n -> n.isStorable());
+		ent.remove(this);
+		ent.forEach(n -> n.moveToMap(inventory));
 	}
 	
 	public String getPlayerName() {
@@ -25,6 +40,10 @@ public class Player extends Entity {
 	
 	public void setPlayerName(String name) {
 		this.player_name = name;
+	}
+	
+	public Map getInventory() {
+		return this.inventory;
 	}
 	
 	public int getHealth() {
@@ -74,5 +93,10 @@ public class Player extends Entity {
 	@Override
 	public String getType() {
 		return ENTITY_TYPE;
+	}
+
+	@Override
+	public boolean isStorable() {
+		return false;
 	}
 }
