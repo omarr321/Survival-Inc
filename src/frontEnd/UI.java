@@ -94,7 +94,7 @@ public class UI extends Application {
 		scene.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
-				if (event.getCode() == KeyCode.LEFT) {
+				if (event.getCode() == KeyCode.A) {
 					if (map.getTile(player.getPosX() - 1, player.getPosY()) != Tile.WATER) {
 						player.move(-1, 0);
 						grid.getChildren().remove(playerPane);
@@ -103,7 +103,7 @@ public class UI extends Application {
 					}
 				}
 
-				if (event.getCode() == KeyCode.RIGHT) {
+				if (event.getCode() == KeyCode.D) {
 					if (map.getTile(player.getPosX() + 1, player.getPosY()) != Tile.WATER) {
 						player.move(1, 0);
 						grid.getChildren().remove(playerPane);
@@ -111,7 +111,7 @@ public class UI extends Application {
 						System.out.printf("(%d,%d)%n", player.getPosX(), player.getPosY());
 					}
 				}
-				if (event.getCode() == KeyCode.UP) {
+				if (event.getCode() == KeyCode.W) {
 					if (map.getTile(player.getPosX(), player.getPosY() - 1) != Tile.WATER) {
 						player.move(0, -1);
 						grid.getChildren().remove(playerPane);
@@ -120,9 +120,45 @@ public class UI extends Application {
 					}
 				}
 
-				if (event.getCode() == KeyCode.DOWN) {
+				if (event.getCode() == KeyCode.S) {
 					if (map.getTile(player.getPosX(), player.getPosY() + 1) != Tile.WATER) {
 						player.move(0, 1);
+						grid.getChildren().remove(playerPane);
+						grid.add(playerPane, player.getPosX(), player.getPosY());
+						System.out.printf("(%d,%d)%n", player.getPosX(), player.getPosY());
+					}
+				}
+				
+				if (event.getCode() == KeyCode.Q) {
+					if (map.getTile(player.getPosX() - 1, player.getPosY() - 1) != Tile.WATER) {
+						player.move(-1, -1);
+						grid.getChildren().remove(playerPane);
+						grid.add(playerPane, player.getPosX(), player.getPosY());
+						System.out.printf("(%d,%d)%n", player.getPosX(), player.getPosY());
+					}
+				}
+				
+				if (event.getCode() == KeyCode.E) {
+					if (map.getTile(player.getPosX() + 1, player.getPosY() - 1) != Tile.WATER) {
+						player.move(1, -1);
+						grid.getChildren().remove(playerPane);
+						grid.add(playerPane, player.getPosX(), player.getPosY());
+						System.out.printf("(%d,%d)%n", player.getPosX(), player.getPosY());
+					}
+				}
+				
+				if (event.getCode() == KeyCode.C) {
+					if (map.getTile(player.getPosX() + 1, player.getPosY() + 1) != Tile.WATER) {
+						player.move(1, 1);
+						grid.getChildren().remove(playerPane);
+						grid.add(playerPane, player.getPosX(), player.getPosY());
+						System.out.printf("(%d,%d)%n", player.getPosX(), player.getPosY());
+					}
+				}
+				
+				if (event.getCode() == KeyCode.Z) {
+					if (map.getTile(player.getPosX() - 1, player.getPosY() + 1) != Tile.WATER) {
+						player.move(-1, 1);
 						grid.getChildren().remove(playerPane);
 						grid.add(playerPane, player.getPosX(), player.getPosY());
 						System.out.printf("(%d,%d)%n", player.getPosX(), player.getPosY());
@@ -145,6 +181,8 @@ public class UI extends Application {
 	}
 
 	private void subMap(Stage primarystage, Map map, World world,Player player, Map main) {
+		int[] nearLand = findLand(map, player);
+		
 		GridPane grid = new GridPane();
 		Pane all = new Pane(grid);
 		Circle you = new Circle();
@@ -177,7 +215,8 @@ public class UI extends Application {
 			System.out.println("Error: columnIndex must be greater or equal to 0!");
 		}
 		
-		grid.add(playerPane, player.getPosX(), player.getPosY());
+		grid.add(playerPane, nearLand[0], nearLand[1]);
+		player.setPos(nearLand[0], nearLand[1]);
 		grid.setGridLinesVisible(true);
 		grid.setLayoutX(500 - 275);
 		grid.setLayoutY(500 - 275);
@@ -185,7 +224,7 @@ public class UI extends Application {
 		scene.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
-				if (event.getCode() == KeyCode.LEFT) {
+				if (event.getCode() == KeyCode.A) {
 					if (map.getTile(player.getPosX() - 1, player.getPosY()) != Tile.WATER) {
 						player.move(-1, 0);
 						grid.getChildren().remove(playerPane);
@@ -194,7 +233,7 @@ public class UI extends Application {
 					}
 				}
 
-				if (event.getCode() == KeyCode.RIGHT) {
+				if (event.getCode() == KeyCode.D) {
 					if (map.getTile(player.getPosX() + 1, player.getPosY()) != Tile.WATER) {
 						player.move(1, 0);
 						grid.getChildren().remove(playerPane);
@@ -202,7 +241,7 @@ public class UI extends Application {
 						System.out.printf("(%d,%d)%n", player.getPosX(), player.getPosY());
 					}
 				}
-				if (event.getCode() == KeyCode.UP) {
+				if (event.getCode() == KeyCode.W) {
 					if (map.getTile(player.getPosX(), player.getPosY() - 1) != Tile.WATER) {
 						player.move(0, -1);
 						grid.getChildren().remove(playerPane);
@@ -211,9 +250,45 @@ public class UI extends Application {
 					}
 				}
 
-				if (event.getCode() == KeyCode.DOWN) {
+				if (event.getCode() == KeyCode.S) {
 					if (map.getTile(player.getPosX(), player.getPosY() + 1) != Tile.WATER) {
 						player.move(0, 1);
+						grid.getChildren().remove(playerPane);
+						grid.add(playerPane, player.getPosX(), player.getPosY());
+						System.out.printf("(%d,%d)%n", player.getPosX(), player.getPosY());
+					}
+				}
+				
+				if (event.getCode() == KeyCode.Q) {
+					if (map.getTile(player.getPosX() - 1, player.getPosY() - 1) != Tile.WATER) {
+						player.move(-1, -1);
+						grid.getChildren().remove(playerPane);
+						grid.add(playerPane, player.getPosX(), player.getPosY());
+						System.out.printf("(%d,%d)%n", player.getPosX(), player.getPosY());
+					}
+				}
+				
+				if (event.getCode() == KeyCode.E) {
+					if (map.getTile(player.getPosX() + 1, player.getPosY() - 1) != Tile.WATER) {
+						player.move(1, -1);
+						grid.getChildren().remove(playerPane);
+						grid.add(playerPane, player.getPosX(), player.getPosY());
+						System.out.printf("(%d,%d)%n", player.getPosX(), player.getPosY());
+					}
+				}
+				
+				if (event.getCode() == KeyCode.C) {
+					if (map.getTile(player.getPosX() + 1, player.getPosY() + 1) != Tile.WATER) {
+						player.move(1, 1);
+						grid.getChildren().remove(playerPane);
+						grid.add(playerPane, player.getPosX(), player.getPosY());
+						System.out.printf("(%d,%d)%n", player.getPosX(), player.getPosY());
+					}
+				}
+				
+				if (event.getCode() == KeyCode.Z) {
+					if (map.getTile(player.getPosX() - 1, player.getPosY() + 1) != Tile.WATER) {
+						player.move(-1, 1);
 						grid.getChildren().remove(playerPane);
 						grid.add(playerPane, player.getPosX(), player.getPosY());
 						System.out.printf("(%d,%d)%n", player.getPosX(), player.getPosY());
@@ -589,5 +664,78 @@ public class UI extends Application {
 				map.removeEntity(entities.get(i));
 			}
 		}
+	}
+
+	private int[] findLand(Map world, Player player) {
+		int dir = 0;
+		boolean currentNum = false;
+		int num = 1;
+		int current = 1;
+		int max = 11;
+		int currentX = player.getPosX();
+		int currentY = player.getPosY();
+
+		while (num <= max) {
+			if (world.getTile(currentX, currentY) == Tile.GRASS) {
+				int[] temp = { currentX, currentY };
+				return temp;
+			} else {
+				if (currentNum == false) {
+					while (current <= num) {
+						System.out.printf("(%d,%d)%n", currentX, currentY);
+						switch (dir) {
+						case 0:
+							currentX++;
+							current++;
+							break;
+						case 1:
+							currentY--;
+							current++;
+							break;
+						case 2:
+							currentX--;
+							current++;
+							break;
+						case 3:
+							currentY++;
+							current++;
+						}
+					}
+					num++;
+					current = 0;
+					
+					currentNum = true;
+				} else {
+					while (current <= num) {
+						System.out.printf("(%d,%d)%n", currentX, currentY);
+						switch (dir) {
+						case 0:
+							currentX++;
+							current++;
+							break;
+						case 1:
+							currentY--;
+							current++;
+							break;
+						case 2:
+							currentX--;
+							current++;
+							break;
+						case 3:
+							currentY++;
+							current++;
+						}
+					}
+					num++;
+					current = 0;
+					
+					dir++;
+					dir = dir % 3;
+					currentNum = false;
+				}
+			}
+		}
+		int[] temp = {5, 5};
+		return temp;
 	}
 }
