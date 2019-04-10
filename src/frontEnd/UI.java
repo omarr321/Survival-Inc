@@ -34,9 +34,15 @@ public class UI extends Application {
 
 	public void start(Stage primarystage) {
 		World world = new World(11, 11, 11, 11);
+		Map mainMap = new Map(11, Tile.STONE);
+		for (int i = 0; i < 11; i++) {
+			for (int j = 0; j < 11; j++) {
+				mainMap.setTile(i, j, world.getMap(i, j).getAverageTile());
+			}
+		}
 		Map map;
 		for (int i = 0; i < 11; i++) {
-				for (int j = 0; j < 11; j++) {
+			for (int j = 0; j < 11; j++) {
 					map = world.getMap(i, j);
 					genTerrain(map);
 					for (int k = 0; k < 2; k++) {
@@ -46,16 +52,12 @@ public class UI extends Application {
 			}
 		}
 		map = world.getMap(0, 0);
-		Player player = new Player(map, 5, 5);
+		Player player = new Player(mainMap, 5, 5);
 		
-		mainMap(primarystage, map, player);
+		mainMap(primarystage, mainMap, world, player);
 	}
 
-	private void mainMap(Stage primarystage, Map map, Player player) {
-		subMap(primarystage, map, player);
-	}
-
-	private void subMap(Stage primarystage, Map map, Player player) {
+	private void mainMap(Stage primarystage, Map map, World world, Player player) {
 		GridPane grid = new GridPane();
 		Pane all = new Pane(grid);
 		Circle you = new Circle();
@@ -98,6 +100,7 @@ public class UI extends Application {
 						player.move(-1, 0);
 						grid.getChildren().remove(playerPane);
 						grid.add(playerPane, player.getPosX(), player.getPosY());
+						System.out.printf("(%d,%d)%n", player.getPosX(), player.getPosY());
 					}
 				}
 
@@ -106,6 +109,7 @@ public class UI extends Application {
 						player.move(1, 0);
 						grid.getChildren().remove(playerPane);
 						grid.add(playerPane, player.getPosX(), player.getPosY());
+						System.out.printf("(%d,%d)%n", player.getPosX(), player.getPosY());
 					}
 				}
 				if (event.getCode() == KeyCode.UP) {
@@ -113,6 +117,7 @@ public class UI extends Application {
 						player.move(0, -1);
 						grid.getChildren().remove(playerPane);
 						grid.add(playerPane, player.getPosX(), player.getPosY());
+						System.out.printf("(%d,%d)%n", player.getPosX(), player.getPosY());
 					}
 				}
 
@@ -121,19 +126,116 @@ public class UI extends Application {
 						player.move(0, 1);
 						grid.getChildren().remove(playerPane);
 						grid.add(playerPane, player.getPosX(), player.getPosY());
+						System.out.printf("(%d,%d)%n", player.getPosX(), player.getPosY());
 					}
+				}
+				
+				if (event.getCode() == KeyCode.ENTER) {
+					player.moveToMap(world.getMap(player.getPosX(), player.getPosY()));
+					subMap(primarystage, world.getMap(player.getPosX(), player.getPosY()), world, player, map);
 				}
 			}
 
 		});
-
+		playerPane.requestFocus();
 		primarystage.setScene(scene);
 		primarystage.setWidth(1000);
 		primarystage.setHeight(1000);
 		primarystage.setTitle("Survival Inc.");
 		primarystage.setResizable(false);
 		primarystage.show();
+	}
 
+	private void subMap(Stage primarystage, Map map, World world,Player player, Map main) {
+		GridPane grid = new GridPane();
+		Pane all = new Pane(grid);
+		Circle you = new Circle();
+		BorderPane playerPane = new BorderPane();
+		you.setStroke(Color.BLACK);
+		you.setFill(Color.RED);
+		you.setStrokeWidth(2);
+		you.setRadius(12);
+		playerPane.setCenter(you);
+		
+		for (int i = 0; i < map.getWidth(); i++) {
+			for (int j = 0; j < map.getHeight(); j++) {
+				BorderPane bPane = new BorderPane();
+				bPane.setPrefSize(50, 50);
+				Rectangle rect = new Rectangle();
+				rect.setStrokeWidth(0);
+				rect.setHeight(50);
+				rect.setWidth(50);
+				Tile tile = map.getTile(i, j);
+
+				rect.setFill(Color.rgb(tile.red, tile.green, tile.blue));
+				bPane.getChildren().add(rect);
+				grid.add(bPane, i, j);
+			}
+		}
+		
+		try {
+		drawAll(map, grid);
+		} catch (IllegalArgumentException ex) {
+			System.out.println("Error: columnIndex must be greater or equal to 0!");
+		}
+		
+		grid.add(playerPane, player.getPosY(), player.getPosX());
+		grid.setGridLinesVisible(true);
+		grid.setLayoutX(500 - 275);
+		grid.setLayoutY(500 - 275);
+		Scene scene = new Scene(all);
+		scene.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent event) {
+				if (event.getCode() == KeyCode.LEFT) {
+					if (map.getTile(player.getPosX() - 1, player.getPosY()) != Tile.WATER) {
+						player.move(-1, 0);
+						grid.getChildren().remove(playerPane);
+						grid.add(playerPane, player.getPosX(), player.getPosY());
+						System.out.printf("(%d,%d)%n", player.getPosX(), player.getPosY());
+					}
+				}
+
+				if (event.getCode() == KeyCode.RIGHT) {
+					if (map.getTile(player.getPosX() + 1, player.getPosY()) != Tile.WATER) {
+						player.move(1, 0);
+						grid.getChildren().remove(playerPane);
+						grid.add(playerPane, player.getPosX(), player.getPosY());
+						System.out.printf("(%d,%d)%n", player.getPosX(), player.getPosY());
+					}
+				}
+				if (event.getCode() == KeyCode.UP) {
+					if (map.getTile(player.getPosX(), player.getPosY() - 1) != Tile.WATER) {
+						player.move(0, -1);
+						grid.getChildren().remove(playerPane);
+						grid.add(playerPane, player.getPosX(), player.getPosY());
+						System.out.printf("(%d,%d)%n", player.getPosX(), player.getPosY());
+					}
+				}
+
+				if (event.getCode() == KeyCode.DOWN) {
+					if (map.getTile(player.getPosX(), player.getPosY() + 1) != Tile.WATER) {
+						player.move(0, 1);
+						grid.getChildren().remove(playerPane);
+						grid.add(playerPane, player.getPosX(), player.getPosY());
+						System.out.printf("(%d,%d)%n", player.getPosX(), player.getPosY());
+					}
+				}
+				
+				if (event.getCode() == KeyCode.ESCAPE) {
+					player.moveToMap(main);
+					mainMap(primarystage, main, world, player);
+				}
+			}
+
+		});
+		playerPane.requestFocus();
+		primarystage.setScene(scene);
+		primarystage.setWidth(1000);
+		primarystage.setHeight(1000);
+		primarystage.setTitle("Survival Inc.");
+		primarystage.setResizable(false);
+		primarystage.show();
 	}
 
 	private void drawAll(Map map, GridPane grid) {
@@ -422,7 +524,11 @@ public class UI extends Application {
 			case 1:
 			case 2:
 				if (checkIsEmpty(map, entities.get(i).getPosX() + xOff, entities.get(i).getPosY() + yOff)) {
-					new Tree(map, entities.get(i).getPosX() + xOff, entities.get(i).getPosY() + yOff);
+					if (entities.get(i).getPosX() + xOff >= 0 && entities.get(i).getPosX() + xOff < 11) {
+						if (entities.get(i).getPosY() + yOff >= 0 && entities.get(i).getPosY() + yOff < 11) {
+							new Tree(map, entities.get(i).getPosX() + xOff, entities.get(i).getPosY() + yOff);
+						}
+					}
 				}
 				break;
 			case 3:
@@ -437,7 +543,11 @@ public class UI extends Application {
 			switch(random) {
 			case 0:
 				if (checkIsEmpty(map, entities.get(i).getPosX() + xOff, entities.get(i).getPosY() + yOff)) {
-					new Rock(map, entities.get(i).getPosX() + xOff, entities.get(i).getPosY() + yOff);
+					if (entities.get(i).getPosX() + xOff >= 0 && entities.get(i).getPosX() + xOff < 11) {
+						if (entities.get(i).getPosY() + yOff >= 0 && entities.get(i).getPosY() + yOff < 11) {
+							new Rock(map, entities.get(i).getPosX() + xOff, entities.get(i).getPosY() + yOff);
+						}
+					}
 				}
 				break;
 			case 1:
