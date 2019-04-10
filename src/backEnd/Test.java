@@ -32,14 +32,23 @@ public class Test {
 		Scanner sc = new Scanner(System.in);
 		boolean exit = false;
 		
-		Map world = new Map(12, 12, 1, 1, Tile.STONE);
+		Map world = new Map(12, 12, 1, 1, Tile.GRASS);
 		world.setName("Cedar Point");
 		Player me = new Player(world);
 		
-		generateScene(world, 20);
+		//generateScene(world, 20);
 		
 		System.out.print("Name your player: ");
 		me.setPlayerName(sc.nextLine());
+		
+		world.setTile(2, 0, Tile.GRASS);
+		world.setTile(3, 0, Tile.GRASS);
+		world.setTile(2, 1, Tile.GRASS);
+		world.setTile(2, 2, Tile.GRASS);
+		world.setTile(0, 5, Tile.WATER);
+		
+		
+		Tile boi = world.getAverageTile();
 		
 		while(!exit) {
 			printGUI(world, me);

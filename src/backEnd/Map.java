@@ -2,6 +2,7 @@ package backEnd;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.function.Predicate;
 
 import entities.*;
@@ -31,18 +32,20 @@ public class Map {
 	private String printname = "Untitled Map";
 
 	public enum Tile {
-		STONE("S", 122, 118, 118),
-		GRASS("G", 21, 156, 0),
-		WATER("W", 20, 33, 212);
+		STONE("S", true, 122, 118, 118),
+		GRASS("G", true, 21, 156, 0),
+		WATER("W", false, 20, 33, 212);
 		
 		public final String printSymbol;
 		public final int red;
 		public final int green;
 		public final int blue;
+		public final boolean walkable;
 		
-		Tile(String printSymbol, int red, int green, int blue) {
+		Tile(String printSymbol, boolean walkable, int red, int green, int blue) {
 
-      this.printSymbol = printSymbol;
+			this.printSymbol = printSymbol;
+			this.walkable = walkable;
 			this.red = red;
 			this.green = green;
 			this.blue = blue;
@@ -164,6 +167,33 @@ public class Map {
 		} else {
 			return null;
 		}
+	}
+
+	public Tile getAverageTile() {
+		HashMap<Tile, Integer> hm = new HashMap<Tile, Integer>();
+		for(int y = 0; y < getHeight(); y++) {
+			for(int x = 0; x < getWidth(); x++) {
+				Tile key = getTile(x, y);
+				if(hm.containsKey(key)) {
+					int value = hm.get(key);
+					hm.put(key, value + 1);
+				} else {
+					hm.put(key, 0);
+				}
+			}
+		}
+		
+		Entry<Tile, Integer> maxEntry = null;
+
+		for (Entry<Tile, Integer> entry : hm.entrySet())
+		{
+		    if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0)
+		    {
+		        maxEntry = entry;
+		    }
+		}
+		
+		return maxEntry.getKey();
 	}
 
 	/*
