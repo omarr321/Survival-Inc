@@ -51,7 +51,6 @@ public class UI extends Application {
 					removeEntitys(map, 5, 5);
 			}
 		}
-		map = world.getMap(0, 0);
 		Player player = new Player(mainMap, 5, 5);
 		
 		mainMap(primarystage, mainMap, world, player);
@@ -86,7 +85,7 @@ public class UI extends Application {
 
 		drawAll(map, grid);
 		
-		grid.add(playerPane, player.getPosY(), player.getPosX());
+		grid.add(playerPane, player.getPosX(), player.getPosY());
 		grid.setGridLinesVisible(true);
 		grid.setLayoutX(500 - 275);
 		grid.setLayoutY(500 - 275);
@@ -137,7 +136,6 @@ public class UI extends Application {
 			}
 
 		});
-		playerPane.requestFocus();
 		primarystage.setScene(scene);
 		primarystage.setWidth(1000);
 		primarystage.setHeight(1000);
@@ -179,7 +177,7 @@ public class UI extends Application {
 			System.out.println("Error: columnIndex must be greater or equal to 0!");
 		}
 		
-		grid.add(playerPane, player.getPosY(), player.getPosX());
+		grid.add(playerPane, player.getPosX(), player.getPosY());
 		grid.setGridLinesVisible(true);
 		grid.setLayoutX(500 - 275);
 		grid.setLayoutY(500 - 275);
@@ -229,7 +227,6 @@ public class UI extends Application {
 			}
 
 		});
-		playerPane.requestFocus();
 		primarystage.setScene(scene);
 		primarystage.setWidth(1000);
 		primarystage.setHeight(1000);
