@@ -5,8 +5,13 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import backEnd.Map;
 import backEnd.Map.Tile;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,20 +19,32 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import backEnd.World;
 import entities.Entity;
+import entities.Lava;
+import entities.Plank;
 import entities.Player;
 import entities.Rock;
 import entities.Stick;
+import entities.Stone;
 import entities.Tree;
+import entities.Wood;
 
 public class UI extends Application {
-
+	private int stickI = 0;
+	private int woodI = 0;
+	private int stoneI = 0;
+	private int plankI = 0;
+	
 	public static void main(String args[]) {
 		launch(args);
 	}
@@ -49,6 +66,8 @@ public class UI extends Application {
 						genEntity(map);
 					}
 					removeEntitys(map, 5, 5);
+					
+					getMostEntity(map, i, j, mainMap);
 			}
 		}
 		Player player = new Player(mainMap, 5, 5);
@@ -72,9 +91,10 @@ public class UI extends Application {
 				BorderPane bPane = new BorderPane();
 				bPane.setPrefSize(50, 50);
 				Rectangle rect = new Rectangle();
-				rect.setStrokeWidth(0);
+				rect.setStrokeWidth(2);
 				rect.setHeight(50);
 				rect.setWidth(50);
+				rect.setStroke(Color.RED);
 				Tile tile = map.getTile(i, j);
 
 				rect.setFill(Color.rgb(tile.red, tile.green, tile.blue));
@@ -182,9 +202,12 @@ public class UI extends Application {
 
 	private void subMap(Stage primarystage, Map map, World world,Player player, Map main) {
 		int[] nearLand = findLand(map, player);
-		
+		BorderPane all = new BorderPane();
+		VBox info = new VBox();
+		HBox health = new HBox();
 		GridPane grid = new GridPane();
-		Pane all = new Pane(grid);
+		HBox maps = new HBox(grid);
+		maps.setAlignment(Pos.CENTER);
 		Circle you = new Circle();
 		BorderPane playerPane = new BorderPane();
 		you.setStroke(Color.BLACK);
@@ -192,7 +215,21 @@ public class UI extends Application {
 		you.setStrokeWidth(2);
 		you.setRadius(12);
 		playerPane.setCenter(you);
+		info.setAlignment(Pos.CENTER);
+		health.setAlignment(Pos.CENTER);
+		Text title = new Text("Map: Sub-Map");
+		player.setPlayerName("Omar Radwan");
+		Text name = new Text("Name: "+ player.getPlayerName());
+		Text amountHeart = new Text(50, 50, "");
+		Text heal = new Text("Health: ");
+		heal.setStyle("-fx-font: 24 Courier;");
+		amountHeart.setStyle("-fx-font: 24 Courier;");
+		name.setStyle("-fx-font: 24 Courier;");
+		title.setStyle("-fx-font: 24 Courier;");
 		
+		health.getChildren().addAll(heal, amountHeart);
+		info.getChildren().addAll(title, name, health);
+		info.setPadding(new Insets(0, 0, 0, 0));
 		for (int i = 0; i < map.getWidth(); i++) {
 			for (int j = 0; j < map.getHeight(); j++) {
 				BorderPane bPane = new BorderPane();
@@ -215,11 +252,87 @@ public class UI extends Application {
 			System.out.println("Error: columnIndex must be greater or equal to 0!");
 		}
 		
+		Map inv = player.getInventory();
+		
+		VBox inva = new VBox();
+		inva.setAlignment(Pos.CENTER_LEFT);
+		
+		HBox sticks = new HBox();
+		HBox woods = new HBox();
+		HBox stones = new HBox();
+		HBox planks = new HBox();
+		sticks.setAlignment(Pos.CENTER_LEFT);
+		woods.setAlignment(Pos.CENTER_LEFT);
+		stones.setAlignment(Pos.CENTER_LEFT);
+		planks.setAlignment(Pos.CENTER_LEFT);
+		
+		Text invat = new Text("Inventory:");
+		invat.setStyle("-fx-font: 24 Courier;");
+		Text stickT = new Text(50, 50, "");
+		stickT.setStyle("-fx-font: 24 Courier;");
+		Text woodT = new Text(50, 50, "");
+		woodT.setStyle("-fx-font: 24 Courier;");
+		Text stoneT = new Text(50, 50, "");
+		stoneT.setStyle("-fx-font: 24 Courier;");
+		Text plankT = new Text(50, 50, "");
+		plankT.setStyle("-fx-font: 24 Courier;");
+		
+		sticks.getChildren().add(stickT);
+		woods.getChildren().add(woodT);
+		stones.getChildren().add(stoneT);
+		planks.getChildren().add(plankT);
+		
+		inva.getChildren().addAll(invat, stickT, woodT, stoneT, plankT);
+		
+		maps.setPadding(new Insets(0, 0, 0, 0));
+		
+		VBox mapsAinfo = new VBox();
+		mapsAinfo.setPadding(new Insets(0, 25, 0, 220));
+		mapsAinfo.setAlignment(Pos.CENTER);
+		HBox mapsAinv = new HBox();
+		mapsAinfo.getChildren().addAll(info, maps);
+		mapsAinv.getChildren().addAll(mapsAinfo, inva);
+		mapsAinv.setAlignment(Pos.TOP_LEFT);
+		all.setCenter(mapsAinv);
 		grid.add(playerPane, nearLand[0], nearLand[1]);
 		player.setPos(nearLand[0], nearLand[1]);
 		grid.setGridLinesVisible(true);
-		grid.setLayoutX(500 - 275);
-		grid.setLayoutY(500 - 275);
+		grid.setLayoutX(225);
+		grid.setLayoutY(225);
+		
+		EventHandler<ActionEvent> hurtLava = new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				ArrayList<Entity> entities = map.getEntitiesAtPos(player.getPosX(), player.getPosY());
+				for (int i = 0; i < entities.size(); i++) {
+					if (entities.get(i) instanceof Lava) {
+						player.setHealth(player.getHealth() - 5);
+						System.out.print(player.getHealth());
+					}
+				}
+				final int heart = player.getHealth();
+				amountHeart.setText(heart + "/100");
+			}
+		};
+		
+		Timeline h = new Timeline(new KeyFrame(Duration.millis(1000), hurtLava));
+		h.setCycleCount(Timeline.INDEFINITE);
+		h.play();
+		
+		EventHandler<ActionEvent> displayIn = new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				stickT.setText("Sticks: " + stickI);
+				woodT.setText("wood: " + woodI);
+				stoneT.setText("Stone: " + stoneI);
+				plankT.setText("planks: " + plankI);
+			}
+		};
+		
+		Timeline in = new Timeline(new KeyFrame(Duration.millis(1), displayIn));
+		in.setCycleCount(Timeline.INDEFINITE);
+		in.play();
+		
 		Scene scene = new Scene(all);
 		scene.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
 			@Override
@@ -299,9 +412,32 @@ public class UI extends Application {
 					player.moveToMap(main);
 					mainMap(primarystage, main, world, player);
 				}
+				
+				if (event.getCode() == KeyCode.F) {
+					ArrayList<Entity> mapSq = map.getEntitiesAtPos(player.getPosX(), player.getPosY());
+					
+					for (int i = 0; i < mapSq.size(); i++) {
+						if (mapSq.get(i) instanceof Stick) {
+							new Stick(inv, 0, 0);
+							stickI++;
+							removeEntitys(map, player.getPosX(), player.getPosY());
+						} else if (mapSq.get(i) instanceof Rock) {
+							new Stone(inv, 0, 0);
+							stoneI++;
+							removeEntitys(map, player.getPosX(), player.getPosY());
+						} else if (mapSq.get(i) instanceof Tree) {
+							new Wood(inv, 0, 0);
+							woodI++;
+							removeEntitys(map, player.getPosX(), player.getPosY());
+						}
+					}
+					
+					subMap(primarystage, map, world, player, main);
+				}
 			}
 
 		});
+		
 		primarystage.setScene(scene);
 		primarystage.setWidth(1000);
 		primarystage.setHeight(1000);
@@ -328,6 +464,10 @@ public class UI extends Application {
 				BorderPane pane2 = new BorderPane();
 				pane2.setCenter(tree());
 				pane.setBottom(pane2);
+				grid.add(pane, entities.get(i).getPosX(), entities.get(i).getPosY());
+			} else if (entities.get(i) instanceof Lava) {
+				BorderPane pane = new BorderPane();
+				pane.setCenter(lava());
 				grid.add(pane, entities.get(i).getPosX(), entities.get(i).getPosY());
 			}
 		}
@@ -372,6 +512,19 @@ public class UI extends Application {
 		return treeV;
 	}
 
+	private ImageView lava() {
+		ImageView lavaV = null;
+		try {
+			FileInputStream inputStream = new FileInputStream("src/assets/Lava.png");
+			Image lava = new Image(inputStream);
+			lavaV = new ImageView(lava);
+		} catch (FileNotFoundException e) {
+			System.out.print("Error: Lava.png not found");
+		}
+
+		return lavaV;
+	}
+	
 	private void genTerrain(Map map) {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
@@ -557,7 +710,7 @@ public class UI extends Application {
 			int randomY = Math.toIntExact(Math.round(Math.random() * 10));
 			
 			if (checkIsEmpty(map, randomX, randomY)) {
-				int temp = Math.toIntExact(Math.round(Math.random() * 2));
+				int temp = Math.toIntExact(Math.round(Math.random() * 3));
 				switch (temp) {
 				case 0:
 					new Stick(map, randomX, randomY);
@@ -567,6 +720,9 @@ public class UI extends Application {
 					break;
 				case 2:
 					new Tree(map, randomX, randomY);
+					break;
+				case 3:
+					new Lava(map, randomX, randomY);
 				}
 			}
 		}
@@ -614,10 +770,31 @@ public class UI extends Application {
 		} else if (entities.get(i) instanceof Rock) {
 			switch(random) {
 			case 0:
+			case 1:
 				if (checkIsEmpty(map, entities.get(i).getPosX() + xOff, entities.get(i).getPosY() + yOff)) {
 					if (entities.get(i).getPosX() + xOff >= 0 && entities.get(i).getPosX() + xOff < 11) {
 						if (entities.get(i).getPosY() + yOff >= 0 && entities.get(i).getPosY() + yOff < 11) {
 							new Rock(map, entities.get(i).getPosX() + xOff, entities.get(i).getPosY() + yOff);
+						}
+					}
+				}
+				break;
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+			case 8:
+			case 9:
+			}
+		} else if (entities.get(i) instanceof Lava) {
+			switch(random) {
+			case 0:
+				if (checkIsEmpty(map, entities.get(i).getPosX() + xOff, entities.get(i).getPosY() + yOff)) {
+					if (entities.get(i).getPosX() + xOff >= 0 && entities.get(i).getPosX() + xOff < 11) {
+						if (entities.get(i).getPosY() + yOff >= 0 && entities.get(i).getPosY() + yOff < 11) {
+							new Lava(map, entities.get(i).getPosX() + xOff, entities.get(i).getPosY() + yOff);
 						}
 					}
 				}
@@ -701,8 +878,10 @@ public class UI extends Application {
 							current++;
 						}
 					}
-					num++;
-					current = 0;
+					dir++;
+					dir = dir % 3;
+					
+					current = 1;
 					
 					currentNum = true;
 				} else {
@@ -727,7 +906,7 @@ public class UI extends Application {
 						}
 					}
 					num++;
-					current = 0;
+					current = 1;
 					
 					dir++;
 					dir = dir % 3;
@@ -738,4 +917,37 @@ public class UI extends Application {
 		int[] temp = {5, 5};
 		return temp;
 	}
-}
+
+	private void getMostEntity(Map map, int x, int y, Map main) {
+		ArrayList<Entity> entities = map.getVisibleEntities();
+		int stick = 0, tree = 0, rock = 0, lava = 0;
+		int check = 30;
+		for (int i = 0; i < entities.size(); i++) {
+			if (entities.get(i) instanceof Stick) {
+				stick++;
+			} else if (entities.get(i) instanceof Rock) {
+				rock++;
+			} else if (entities.get(i) instanceof Tree) {
+				tree++;
+			} else if (entities.get(i) instanceof Lava) {
+				lava++;
+			}
+		}
+		
+		if (stick >= tree && stick >= rock && stick >= lava) {
+			if (stick >= check) {
+				new Stick (main, x, y);
+			}
+		} else if (tree >= stick && tree >= rock && tree >= lava) {
+			if (tree >= check) {
+				new Tree (main, x, y);
+			}
+		} else if (rock >= stick && rock >= tree && rock >= lava) {
+			if (rock >= check) {
+				new Rock (main, x, y);
+			}
+		} else if (lava >= stick && lava >= tree && lava >= rock) {
+				new Lava (main, x, y);
+			}
+		}
+	}
