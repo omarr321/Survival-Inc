@@ -1,5 +1,7 @@
 package backEnd;
 
+import backEnd.Map.Tile;
+
 /*
  * 
  */
@@ -9,13 +11,21 @@ public class World {
 
 	private Map[][] mapgrid;
 
-	public World(int width, int height) {
+	public World(int width, int height, int map_width, int map_height) {
 		mapgrid = new Map[width][height];
 		for (int i = 0; i < mapgrid.length; i++) {
 			for (int j = 0; j < mapgrid[0].length; j++) {
-				this.mapgrid[i][j] = new Map();
+				this.mapgrid[i][j] = new Map(map_width, map_height, Tile.GRASS);
 			}
 		}
+	}
+	
+	public World(int width, int height, int map_size) {
+		this(width, height, map_size, map_size);
+	}
+	
+	public World(int width, int height) {
+		this(width, height, DEFAULT_SIZE);
 	}
 
 	public World(int size) {

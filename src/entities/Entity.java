@@ -12,7 +12,7 @@ import backEnd.*;
 public abstract class Entity {
 	protected Map containedMap;
 
-	private int layer = 0;
+	//private int layer = 0;
 	
 	protected int posX;
 	protected int posY;
@@ -75,7 +75,7 @@ public abstract class Entity {
 	 * @return If position was in bounds
 	 */
 	public boolean setPos(int x, int y) {
-		if (containedMap.isValidPosition(x, y)) {
+		if (containedMap.isValidPosition(x, y) && containedMap.getTile(x, y).walkable) {
 			posX = x;
 			posY = y;
 			return true;
