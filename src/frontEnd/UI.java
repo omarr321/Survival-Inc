@@ -3,7 +3,6 @@ package frontEnd;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import backEnd.Map;
 import backEnd.Map.Tile;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -27,16 +26,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import backEnd.World;
-import entities.Entity;
-import entities.Lava;
-import entities.Plank;
-import entities.Player;
-import entities.Rock;
-import entities.Stick;
-import entities.Stone;
-import entities.Tree;
-import entities.Wood;
+import backEnd.*;
+import entities.*;
 
 public class UI extends Application {
 	private int stickI = 0;
@@ -94,7 +85,7 @@ public class UI extends Application {
 		info.setAlignment(Pos.CENTER);
 		health.setAlignment(Pos.CENTER);
 		Text title = new Text("Map: Main-map");
-		player.setPlayerName("Omar Radwan");
+		player.setPlayerName("Player 1");
 		Text name = new Text("Name: " + player.getPlayerName());
 		Text amountHeart = new Text(50, 50, "");
 		Text heal = new Text("Health: ");
