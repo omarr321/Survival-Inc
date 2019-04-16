@@ -2,21 +2,43 @@ package entities;
 
 import backEnd.Map;
 
+/*
+ * Sticks can be crafted by chopping down trees. Used to make wooden planks.
+ * 
+ * @author Wyatt Phillips
+ */
 public class Stick extends Entity {
 
 	public final String ENTITY_TYPE = "Stick";
 	private int layer = 0;
 	
+	/*
+	 * Constructor.
+	 * 
+	 * @param containedMap the map to spawn into.
+	 * @param x The x position to spawn to in map.
+	 * @param y The y position to spawn to in map.
+	 */
 	public Stick(Map containedMap, int x, int y) {
 		super(containedMap, x, y);
 		setLayer(0);
 	}
 
+	/*
+	 * Constructor. Spawns to map spawn point.
+	 * 
+	 * @param containedMap the map to spawn into.
+	 */
 	public Stick(Map containedMap) {
 		super(containedMap);
 		setLayer(0);
 	}
 
+	/*
+	 * Obtains print symbol for use in debugging to console.
+	 * 
+	 * @return Print Symbol
+	 */
 	public String getPrintSymbol() {
 		return "/";
 	}
@@ -52,6 +74,11 @@ public class Stick extends Entity {
 		return ENTITY_TYPE;
 	}
 
+	/*
+	 * Returns if the entity is storable in player's inventory.
+	 * 
+	 * @return if entity is storable. This should be set to false for a player lol.
+	 */
 	@Override
 	public boolean isStorable() {
 		return true;

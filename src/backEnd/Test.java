@@ -6,6 +6,9 @@ import java.util.Scanner;
 import backEnd.Map.Tile;
 import entities.*;
 
+/* JAVA CLASS NOT ESSENTIAL TO CORE PROGRAM.
+ * USED FOR TESTING PUROPUSES ONLY. WILL NOT BE DOCUMENTED!
+ */
 public class Test {
 	
 	public static void printGUI(Map map, Player player) {
