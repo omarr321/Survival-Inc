@@ -22,19 +22,6 @@ with the front-end
 to be rendered into screen. It must also instantiate the player with kayboard controls.
 ## Plan
 * Week 1 (March 3 - March 10)
-<<<<<<< HEAD
-	1. Finsh setting up repostory
-	2. Discuss what we do further
-* Week 2 (March 10 - March 16)
-	1. Meet up to work on UMLs
-	2. Work on UMLs
-* Week 3
-	* TBA
-* Week 4
-	* TBA
-* Week 5
-	* TBA
-=======
 	1. Finish setting up repository
 	2. Discuss the overall game concept in better detail
 * Week 2 (March 10 - March 17)
@@ -73,7 +60,6 @@ Command:
 
 ## Demo video
 
->>>>>>> refs/heads/Re-documenting
 ## Team members
 1. Omar Radwan, Front-end Engineer
 2. Wyatt Phillips, Back-end Engineer
