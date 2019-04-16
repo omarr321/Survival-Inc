@@ -24,7 +24,6 @@ public class Map {
 
 	public static final int DEFAULT_SIZE = 24;
 	public static final Tile DEFAULT_TILE = Tile.GRASS;
-	// TODO: Document Final
 	public static final String ALL_ENTITIES = "ALL";
 
 	private int spawnX;
@@ -59,13 +58,9 @@ public class Map {
 	 * Constructor.
 	 * 
 	 * @param width The amount of tiles that expand horizontally
-	 * 
 	 * @param height The amount of tiles that expand vertically
-	 * 
 	 * @param spawnX The default spawn point X for all entities
-	 * 
 	 * @param spawnY The default spawn point Y for all entities
-	 * 
 	 * @param fill The tile that will fill the entire map
 	 */
 	public Map(int width, int height, int spawnX, int spawnY, Tile fill) {
@@ -81,9 +76,7 @@ public class Map {
 	 * Constructor. Spawn is automatically set to the center of the map.
 	 * 
 	 * @param width The amount of tiles that expand horizontally
-	 * 
 	 * @param height The amount of tiles that expand vertically
-	 * 
 	 * @param fill The tile that will fill the entire map
 	 */
 	public Map(int width, int height, Tile fill) {
@@ -94,9 +87,7 @@ public class Map {
 	 * Constructor. Aspect ratio of map is 1:1 and spawns are auto set to map
 	 * center.
 	 * 
-	 * @param The amount of tiles that expand horizontally and vertically (size =
-	 * width = height)
-	 * 
+	 * @param size The amount of tiles that expand horizontally and vertically (size = width = height)
 	 * @param fill The tile that will fill the entire map
 	 */
 	public Map(int size, Tile fill) {
@@ -143,7 +134,6 @@ public class Map {
 	 * Sets a tile at a valid position
 	 * 
 	 * @param x The x location of the tile (must be in bounds)
-	 * 
 	 * @param y The y location of the tile (must be in bounds)
 	 */
 	public void setTile(int x, int y, Tile tile) {
@@ -156,10 +146,8 @@ public class Map {
 	 * Gets a tile from a valid position
 	 * 
 	 * @param x The x location of the tile (must be in bounds)
-	 * 
 	 * @param y The y location of the tile (must be in bounds)
-	 * 
-	 * @return The tile at (x,y)
+	 * @return The tile at (x,y) or null if not in bounds.
 	 */
 	public Tile getTile(int x, int y) {
 		if (isValidPosition(x, y)) {
@@ -169,6 +157,11 @@ public class Map {
 		}
 	}
 
+	/*
+	 * Gets the most occuring tile in the map.
+	 * 
+	 * @return The tile that occurs the most in map.
+	 */
 	public Tile getAverageTile() {
 		HashMap<Tile, Integer> hm = new HashMap<Tile, Integer>();
 		for(int y = 0; y < getHeight(); y++) {
@@ -256,9 +249,7 @@ public class Map {
 	 * Gets all entities that exists at a specific position.
 	 * 
 	 * @param x The x position to look for entities.
-	 * 
 	 * @param y The y position to look for entities.
-	 * 
 	 * @return The list of entities found at that position.
 	 */
 	public ArrayList<Entity> getEntitiesAtPos(int x, int y) {
@@ -328,9 +319,7 @@ public class Map {
 	 * Checks if the provided position is in bounds of the map
 	 * 
 	 * @param x The x position on the map
-	 * 
 	 * @param y The y position on the map
-	 * 
 	 * @return if the (x,y) coordinate is in bounds of the map space
 	 */
 	public boolean isValidPosition(int x, int y) {
@@ -356,11 +345,10 @@ public class Map {
 	}
 
 	/*
-	 * Sets the spawn location for all entities. Sets to previous of co-ordinates
+	 * Sets the spawn location for all entities. Does not change position if co-ordinates
 	 * are invalid to map.
 	 * 
 	 * @param x The x co-ordinate for spawn (Must be in bounds)
-	 * 
 	 * @param y The y co-ordinate for spawn (Must be in bounds)
 	 */
 	public void setDefaultSpawn(int x, int y) {
@@ -372,10 +360,12 @@ public class Map {
 
 	/*
 	 * Adds an entity to the list. Can only be called under the following
-	 * conditions: 1) Entity must not exist on another Map's list. 2) Entity must
-	 * have it's map reference set to this Map instance. 3) Position must be valid
-	 * to render properly.
+	 * conditions:
+	 * 1) Entity must not exist on another Map's list.
+	 * 2) Entity must have it's map reference set to this Map instance.
+	 * 3) Position must be valid to render properly.
 	 * 
+	 * @param entity The entity to add.
 	 * @return The entity added to the list.
 	 */
 	public Entity addEntity(Entity entity) {
@@ -391,6 +381,7 @@ public class Map {
 	 * Removes the entity from the list. Assuming only one of the same reference
 	 * exists.
 	 * 
+	 * @param entity The entity to remove.
 	 * @return The entity removed from the list.
 	 */
 	public Entity removeEntity(Entity entity) {

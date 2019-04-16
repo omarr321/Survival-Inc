@@ -2,23 +2,45 @@ package entities;
 
 import backEnd.Map;
 
+/*
+ * Plank is a storable entity that is crafted using sticks.
+ * 
+ * @author Omar Radwan
+ */
 public class Plank extends Entity {
 
 	public final String ENTITY_TYPE = "Plank";
 	private int layer = 0;
 	
+	/*
+	 * Constructor.
+	 * 
+	 * @param containedMap the map to spawn into.
+	 * @param x The x position to spawn to in map.
+	 * @param y The y position to spawn to in map.
+	 */
 	public Plank(Map containedMap, int x, int y) {
 		super(containedMap, x, y);
 		setLayer(0);
 	}
 
+	/*
+	 * Constructor. Spawns to map spawn point.
+	 * 
+	 * @param containedMap the map to spawn into.
+	 */
 	public Plank(Map containedMap) {
 		super(containedMap);
 		setLayer(0);
 	}
 
+	/*
+	 * Obtains print symbol for use in debugging to console.
+	 * 
+	 * @return Print Symbol
+	 */
 	public String getPrintSymbol() {
-		return "/";
+		return "#";
 	}
 
 	/*
@@ -52,6 +74,11 @@ public class Plank extends Entity {
 		return ENTITY_TYPE;
 	}
 
+	/*
+	 * Returns if the entity is storable in player's inventory
+	 * 
+	 * @return if entity is storable
+	 */
 	@Override
 	public boolean isStorable() {
 		return true;

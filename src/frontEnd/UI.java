@@ -29,6 +29,13 @@ import javafx.util.Duration;
 import backEnd.*;
 import entities.*;
 
+/*
+ * Main driver and front-end of the game. Contains main method
+ * and manages a world containing maps. Contains inherited Application
+ * of JavaFX and provides rendering and keyboard control capabilites
+ * 
+ * @author Omar Radwan
+ */
 public class UI extends Application {
 	private int stickI = 0;
 	private int woodI = 0;

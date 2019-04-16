@@ -22,9 +22,7 @@ public abstract class Entity {
 	 * Constructor.
 	 * 
 	 * @param containedMap The map to spawn the Entity into.
-	 * 
 	 * @param x The x position it spawn the entity.
-	 * 
 	 * @param y The y position it spawn the entity.
 	 */
 	public Entity(Map containedMap, int x, int y) {
@@ -69,9 +67,7 @@ public abstract class Entity {
 	 * boundaries. If position is not in bounds, the entity will not move.
 	 * 
 	 * @param x The x position where entity moves to (if in bounds)
-	 * 
 	 * @param y The y position where entity moves to (if in bounds)
-	 * 
 	 * @return If position was in bounds
 	 */
 	public boolean setPos(int x, int y) {
@@ -88,9 +84,7 @@ public abstract class Entity {
 	 * Moves entity by an increment of x and y.
 	 * 
 	 * @param x The increment that entity moves horizontally
-	 * 
 	 * @param y The increment that entity moves vertically
-	 * 
 	 * @return If position was in bounds
 	 */
 	public boolean move(int x, int y) {
@@ -144,13 +138,9 @@ public abstract class Entity {
 		this.visible = visible;
 	}
 	
-	public void setLayer(int layer) {
-		
-	}
+	public abstract void setLayer(int layer);
 	public abstract int getLayer();
-
 	public abstract String getType();
-
 	public abstract String getPrintSymbol();
 	public abstract boolean isStorable();
 }
