@@ -1,11 +1,29 @@
 # Progress Updates
+
 ## Week 1 (March 3 - March 10)
+### What did your team do last week?
+* We went over the general layout of the games features. Our goal is to figure out the requirements of the game mechanics. This would in turn plan out the UML of our class structure for a Java Application.
+
+* The GitHub repository was created along with the branches. To not complicate the merging process, it was best to separate the branches by front-end and back-end. We would also branch out our own branches to add features that may or may not work.
+
+### What will you do this week?
+* We want to make a UML that uses most of the concepts we've learned in CS2 but works with our game and can make the integration process smooth.
+
+* Will need to touch up on JavaFX concepts for Omar's front-end. We decided to code all graphics instead of using a scene builder.
+
+### Any blocking issues/challenges need to be addressed?
+* JavaFX needs to be fixed on Wyatt's computer in order to debug and test the game
+
+## Week 2 (March 10 - March 17)
 ### What did your team do last week?
 * Planned out the UML design of our project. It allowed us to understand how the game mechanics would work and what needed to be done to ensure our classes work with JavaFX (Front-end).
 
 * The idea is to follow an inheritance model for physical entities in the game. This can include anything from the player to natural resources. For example, most physical objects in game inherit the Entity class. This will contain variables needed for rendering and game mechanics such as position and color. The player can also inherit this as it's also a physical thing that can be rendered.
 
 ### What will you do this week?
+* We want to make a UML that uses most of the concepts we've learned in CS2 but works with our game and can make the integration process smooth.
+*
+
 * We ended up making the map structure. But decided to set position based on indexes of a 2d map array and store only color objects that would define a tile. This may pose a challange as it's not a good practice to use indexes as changable values.
 
 * The UI works well so far, we were able to generate maps and move the player in bounds to the grid pane. We even set up a procedural generating algorithm so tiles are not truely random and instead are grouped naturaly into chunks.
