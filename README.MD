@@ -57,8 +57,10 @@ Command:
 ```java -jar survival_inc.jar```
 
 ## Features
+Collecting and crafting items
 
 ## Demo video
+https://youtu.be/LVhWlp0CQfg
 
 ## Team members
 1. Omar Radwan, Front-end Engineer
