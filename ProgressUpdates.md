@@ -46,4 +46,23 @@
 
 ### Any blocking issues/challenges need to be addressed?
 * Mostly to get more done this week than last week. We need to stick to the main goals defined in our proposal and to use proper programming habits.
-*
+
+
+## Week 4 (March 24 - March 31)
+### What did your team do last week?
+* We completed the core methods of the Map and Entity classes. We created a binding system that relates entities to maps. Therefore, entities only belong to one map at a time. But maps can return lists of entities.
+
+* We utilized lambda expressions to allow for the filtering of entities by the results of getter methods.
+
+* Because terrain was static and was in a fixed position. We treated terrain as a separate class from entity. They are an enumerated type called Tiles and contain properties such as color.
+
+* An API was documented in the classes as a way for the front-end developer to call appropriate methods to run a workable game.
+
+### What will you do this week?
+* We plan to add the in game entities and define properties, as well as work on the player entity and how it might work with the the front-end.
+
+* The idea is that adding entities is streamline because they have the code in the super-class to exist physically on a map. The use of OOP makes adding content easier.
+
+### Any blocking issues/challenges need to be addressed?
+* We were using GitHub improperly to merge code. While we were using different branches, the back-end branch was derived from the front-end and re-basing was required. We did not know how to re-base which mean we spent a few hours just to fix the way we merge our classes.
+* The integration was later then we thought. While both ends had good code, we had yet to combine it into a functional game. He hope to integrate everything by this Friday.
