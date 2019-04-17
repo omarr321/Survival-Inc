@@ -14,6 +14,7 @@
 ### Any blocking issues/challenges need to be addressed?
 * JavaFX needs to be fixed on Wyatt's computer in order to debug and test the game
 
+
 ## Week 2 (March 10 - March 17)
 ### What did your team do last week?
 * Planned out the UML design of our project. It allowed us to understand how the game mechanics would work and what needed to be done to ensure our classes work with JavaFX (Front-end).
@@ -21,8 +22,6 @@
 * The idea is to follow an inheritance model for physical entities in the game. This can include anything from the player to natural resources. For example, most physical objects in game inherit the Entity class. This will contain variables needed for rendering and game mechanics such as position and color. The player can also inherit this as it's also a physical thing that can be rendered.
 
 ### What will you do this week?
-* We want to make a UML that uses most of the concepts we've learned in CS2 but works with our game and can make the integration process smooth.
-*
 
 * We ended up making the map structure. But decided to set position based on indexes of a 2d map array and store only color objects that would define a tile. This may pose a challange as it's not a good practice to use indexes as changable values.
 
@@ -32,3 +31,19 @@
 * We need to utilise classes more. We have yet to make a Player class and all controls are defined as handlers in the UI class. We need to figure out how to seperate the player as a class and implement a relation between player and JavaFX
 
 * Team communication can be difficult as we try to keep track of the code. We are constantly working to make sure merging our code is a smooth process.
+
+
+## Week 3 (March 17 - March 24)
+### What did your team do last week?
+* We made a draft of how the game will look. While it was impressive and well polished, it failed to use Object Oriented programming.
+
+* As a result, we scraped the code and decided to stick with the UML. This time, keeping in mind of how using such methods of programming will allow for the game to become scale-able.
+
+### What will you do this week?
+* Wyatt will work on the Map and Entity classes in the back-end as they are essential to creating the game environment for physical object handling. With the inheritance model for Entities, a limitless amount of in-game objects can be added.
+
+* Omar will re-write the front-end to call methods from the Map and Entity classes using the UML.
+
+### Any blocking issues/challenges need to be addressed?
+* Mostly to get more done this week than last week. We need to stick to the main goals defined in our proposal and to use proper programming habits.
+*
