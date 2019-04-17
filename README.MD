@@ -44,14 +44,14 @@ to be rendered into screen. It must also instantiate the player with kayboard co
 ### Install
 To get runnable jar file. Download using the link below:
 
-```wget http://analogcastle.com/apps/survival_inc.zip```
+```wget http://analogcastle.com/apps/Survival-Inc.zip```
 
 Then extract all contents of zip folder
 
 ```unzip survival_inc.zip```
 
 ### Run
-You may simply "run survival_inc.jar" located in the main directory.
+You may simply "run Final.jar" located in the main directory.
 
 Command:
 ```java -jar survival_inc.jar```
