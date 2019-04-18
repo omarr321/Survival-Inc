@@ -57,7 +57,9 @@ Command:
 ```java -jar survival_inc.jar```
 
 ## Features
-Collecting and crafting items
+	1. Crafting items like sticks and planks.
+	2. Picking up items like trees, rocks, and sticks.
+	3. Can move with the W, A, S, and D keys.
 
 ## Demo video
 https://youtu.be/LVhWlp0CQfg
